@@ -1,7 +1,6 @@
-package whatisup.kotlin.app.data
+package whatisup.kotlin.app.domain
 
 import platform.UIKit.UIDevice
-import whatisup.kotlin.app.domain.Platform
 
 class IOSPlatform: Platform {
     override val name: String = UIDevice.currentDevice.systemName() + " " + UIDevice.currentDevice.systemVersion

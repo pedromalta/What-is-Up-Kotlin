@@ -21,8 +21,7 @@ private const val TAG = "HTTP Client"
 private const val URL = "api.github.com"
 private const val PORT = 80
 
-
-private class DefaultHttpClient(
+class DefaultHttpClient(
     engine: HttpClientEngine = getPlatformHttpClientEngine()
 ) {
     private val githubApiClient: HttpClient = HttpClient(engine) {
