@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import whatisup.kotlin.app.data.Greeting
+import whatisup.kotlin.app.domain.Greeting
 
 import whatisupkotlin.composeapp.generated.resources.Res
 import whatisupkotlin.composeapp.generated.resources.compose_multiplatform

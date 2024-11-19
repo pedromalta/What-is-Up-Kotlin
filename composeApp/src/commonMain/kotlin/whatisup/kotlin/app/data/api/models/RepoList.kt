@@ -10,5 +10,4 @@ data class RepoList(
     @SerialName("incomplete_results")
     val isIncompleteResults: Boolean,
     val items: List<Repo>
-
 )

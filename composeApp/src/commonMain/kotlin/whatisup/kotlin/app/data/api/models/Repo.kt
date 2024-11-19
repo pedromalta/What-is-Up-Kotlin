@@ -40,4 +40,3 @@ data class Repo(
     @SerialName("default_branch") val defaultBranch: String,
     val score: Double
 )
-
