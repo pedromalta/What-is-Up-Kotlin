@@ -6,6 +6,9 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -15,7 +18,14 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions{
+        // Suppress warnings for using actual/expected classes
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -27,8 +37,22 @@ kotlin {
             binaryOption("bundleId", "whatisup.kotlin.app")
         }
     }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
     
     sourceSets {
+
+        dependencies {
+            debugImplementation(compose.uiTooling)
+            add("kspAndroid", libs.androidx.room.compiler)
+            add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+            add("kspIosX64", libs.androidx.room.compiler)
+            add("kspIosArm64", libs.androidx.room.compiler)
+
+        }
+
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -48,6 +72,9 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.sqlite.bundled)
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
@@ -94,7 +121,4 @@ android {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
 
