@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RepoUser(
-    val login: String,
     val id: Long,
+    val login: String,
     val url: String,
     @SerialName("node_id") val nodeId: String,
     @SerialName("avatar_url") val avatarUrl: String,
