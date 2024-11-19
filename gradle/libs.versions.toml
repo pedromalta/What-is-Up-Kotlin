@@ -12,6 +12,7 @@ androidx-lifecycle = "2.8.3"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 compose-multiplatform = "1.7.0"
+reaktive = "2.3.0"
 junit = "4.13.2"
 kotlin = "2.0.21"
 datetime = "0.6.1"
@@ -61,6 +62,9 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+reaktive = { module = "com.badoo.reaktive:reaktive", version.ref = "reaktive" }
+reaktive-coroutines-interop = { module = "com.badoo.reaktive:coroutines-interop", version.ref = "reaktive" }
+reaktive-annotations = { module = "com.badoo.reaktive:reaktive-annotations", version.ref = "reaktive" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 [plugins]
