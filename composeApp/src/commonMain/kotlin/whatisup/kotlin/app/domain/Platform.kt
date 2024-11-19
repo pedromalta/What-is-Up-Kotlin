@@ -1,4 +1,4 @@
-package whatisup.kotlin.app
+package whatisup.kotlin.app.domain
 
 interface Platform {
     val name: String

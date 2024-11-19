@@ -1,4 +1,4 @@
-package whatisup.kotlin.app
+package whatisup.kotlin.app.domain
 
 import android.os.Build
 

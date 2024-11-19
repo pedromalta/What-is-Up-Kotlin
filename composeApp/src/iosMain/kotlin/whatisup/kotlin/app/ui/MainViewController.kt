@@ -1,4 +1,4 @@
-package whatisup.kotlin.app
+package whatisup.kotlin.app.ui
 
 import androidx.compose.ui.window.ComposeUIViewController
 
