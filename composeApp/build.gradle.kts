@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -53,7 +54,6 @@ kotlin {
 
         }
 
-
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -95,6 +95,22 @@ kotlin {
             implementation (libs.reaktive.coroutines.interop)
 
         }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.junit)
+            implementation(libs.reaktive.testing)
+        }
+
+        androidUnitTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.junit)
+            implementation(libs.reaktive.testing)
+        }
+
+
     }
 }
 
