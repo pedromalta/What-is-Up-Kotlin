@@ -6,10 +6,17 @@ import androidx.room.PrimaryKey
 @Entity
 data class Repo(
     @PrimaryKey val id: Long,
+    val page: Int,
     val name: String,
     val fullName: String,
     val isPrivate: Boolean,
-    val owner: RepoUser,
+    val ownerId: Long,
+    val ownerLogin: String,
+    val ownerUrl: String,
+    val ownerNodeId: String,
+    val ownerAvatarUrl: String,
+    val ownerGravatarId: String?,
+    val ownerType: String,
     val htmlUrl: String,
     val description: String?,
     val isFork: Boolean,

@@ -1,4 +1,4 @@
-package whatisup.kotlin.app.data.models
+package whatisup.kotlin.app.domain.models
 
 data class RepoUser(
     val id: Long,

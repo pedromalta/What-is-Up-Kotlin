@@ -1,4 +1,4 @@
-package whatisup.kotlin.app.data.models
+package whatisup.kotlin.app.domain.models
 
 data class RepoPullRequest(
     val id: Long,
@@ -12,7 +12,13 @@ data class RepoPullRequest(
     val state: String,
     val isLocked: Boolean,
     val title: String,
-    val user: RepoUser,
+    val userId: Long,
+    val userLogin: String,
+    val userUrl: String,
+    val userNodeId: String,
+    val userAvatarUrl: String,
+    val userGravatarId: String?,
+    val userType: String,
     val body: String?,
     val createdAt: String,
     val updatedAt: String,

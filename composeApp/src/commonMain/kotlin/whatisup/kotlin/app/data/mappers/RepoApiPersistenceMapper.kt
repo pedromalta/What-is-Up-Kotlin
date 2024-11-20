@@ -3,18 +3,23 @@ package whatisup.kotlin.app.data.mappers
 import whatisup.kotlin.app.data.api.models.Repo as ApiRepo
 import whatisup.kotlin.app.data.persistence.models.Repo as PersistenceRepo
 
-class RepoMapper(
-    private val repoUserMapper: RepoUserMapper = RepoUserMapper()
-) : Mapper<ApiRepo, PersistenceRepo> {
+class RepoApiPersistenceMapper(private val page: Int) : Mapper<ApiRepo, PersistenceRepo> {
 
     override fun transform(origin: ApiRepo): PersistenceRepo {
         origin.apply {
             return PersistenceRepo(
                 id = id,
+                page = page,
                 name = name,
                 fullName = fullName,
                 isPrivate = isPrivate,
-                owner = repoUserMapper.transform(owner),
+                ownerId = owner.id,
+                ownerLogin = owner.login,
+                ownerUrl = owner.url,
+                ownerNodeId = owner.nodeId,
+                ownerAvatarUrl = owner.avatarUrl,
+                ownerGravatarId = owner.gravatarId,
+                ownerType = owner.type,
                 htmlUrl = htmlUrl,
                 description = description,
                 isFork = isFork,

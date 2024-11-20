@@ -1,14 +1,12 @@
 package whatisup.kotlin.app.data.mappers
 
+import whatisup.kotlin.app.domain.models.RepoPullRequest as ModelPullRequest
 import whatisup.kotlin.app.data.persistence.models.RepoPullRequest as PersistencePullRequest
-import whatisup.kotlin.app.data.api.models.RepoPullRequest as ApiPullRequest
 
-class RepoPullRequestMapper(
-    private val repoUserMapper: RepoUserMapper = RepoUserMapper()
-): Mapper<ApiPullRequest, PersistencePullRequest> {
-    override fun transform(origin: ApiPullRequest): PersistencePullRequest {
+class RepoPullRequestPersistenceModelMapper: Mapper<PersistencePullRequest, ModelPullRequest> {
+    override fun transform(origin: PersistencePullRequest): ModelPullRequest {
         origin.apply {
-            return PersistencePullRequest(
+            return ModelPullRequest(
                 id = id,
                 title = title,
                 body = body,
@@ -17,7 +15,13 @@ class RepoPullRequestMapper(
                 updatedAt = updatedAt,
                 closedAt = closedAt,
                 mergedAt = mergedAt,
-                user = repoUserMapper.transform(user),
+                userId = userId,
+                userLogin = userLogin,
+                userUrl = userUrl,
+                userNodeId = userNodeId,
+                userAvatarUrl = userAvatarUrl,
+                userGravatarId = userGravatarId,
+                userType = userType,
                 url = url,
                 nodeId = nodeId,
                 htmlUrl = htmlUrl,

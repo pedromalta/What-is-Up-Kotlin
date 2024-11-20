@@ -1,11 +1,17 @@
-package whatisup.kotlin.app.data.models
+package whatisup.kotlin.app.domain.models
 
 data class Repo(
     val id: Long,
     val name: String,
     val fullName: String,
     val isPrivate: Boolean,
-    val owner: RepoUser,
+    val ownerId: Long,
+    val ownerLogin: String,
+    val ownerUrl: String,
+    val ownerNodeId: String,
+    val ownerAvatarUrl: String,
+    val ownerGravatarId: String?,
+    val ownerType: String,
     val htmlUrl: String,
     val description: String?,
     val isFork: Boolean,
