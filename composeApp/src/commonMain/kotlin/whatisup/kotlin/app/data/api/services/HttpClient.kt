@@ -19,7 +19,7 @@ expect fun getPlatformHttpClientEngine(): HttpClientEngine
 
 private const val TAG = "HTTP Client"
 private const val URL = "api.github.com"
-private const val PORT = 80
+private const val PORT = 443
 
 class DefaultHttpClient(
     engine: HttpClientEngine = getPlatformHttpClientEngine()
@@ -34,7 +34,7 @@ class DefaultHttpClient(
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
-                    KtorSimpleLogger(TAG).debug(message)
+                    println(message)
                 }
             }
         }
