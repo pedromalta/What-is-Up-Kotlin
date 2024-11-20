@@ -62,6 +62,7 @@ class DataSourceImplTest {
         )
         every { addOrUpdateRepos(any()) } returns Unit
     }
+
     private val api = mock<GithubApi> {
         everySuspend { searchRepositories(page = 1) } returns mockApiResultPage1
         everySuspend { searchRepositories(page = 2) } returns mockApiResultPage2
@@ -91,25 +92,20 @@ class DataSourceImplTest {
             testingScheduler.process()
 
             val firstPageResult = dataSource.repoListSubject.value
-            assertEquals(30, firstPageResult.size, "Repo list should contain 30 items")
+            assertEquals(30, firstPageResult.size, "Repo list should now contain 30 items, 1 page")
 
             dataSource.fetchRepoList(page = 2)
             testingScheduler.process()
 
             val secondPageResult = dataSource.repoListSubject.value
-            assertEquals(60, secondPageResult.size, "Repo list should contain 30 items")
+            assertEquals(60, secondPageResult.size, "Repo list should contain 60 items, 2 pages")
 
             dataSource.fetchRepoList(page = 1)
             testingScheduler.process()
 
             val cachePageResult = dataSource.repoListSubject.value
-            assertEquals(60, cachePageResult.size, "Repo list should contain 30 items")
+            assertEquals(60, cachePageResult.size, "Repo list should still contain 60 items, 2 pages")
 
-
-
-            //verify { db.getRepos(1) }
-            //verifySuspend { api.searchRepositories(page = 1) }
-            //verify { db.addOrUpdateRepos(apiRepos) }
         }
     }
 
