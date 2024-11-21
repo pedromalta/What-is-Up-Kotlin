@@ -3,7 +3,6 @@ package whatisup.kotlin.app.domain
 import com.badoo.reaktive.coroutinesinterop.singleFromCoroutine
 import com.badoo.reaktive.disposable.scope.DisposableScope
 import com.badoo.reaktive.observable.Observable
-import com.badoo.reaktive.observable.map
 import com.badoo.reaktive.scheduler.Scheduler
 import com.badoo.reaktive.single.map
 import com.badoo.reaktive.single.observeOn
@@ -21,6 +20,7 @@ import whatisup.kotlin.app.domain.models.RepoPullRequest
 interface DataSource {
 
     val repoListTotalCount: BehaviorObservable<Int>
+
     //Use set to avoid duplicates
     val repoListSubject: BehaviorObservable<Set<Repo>>
     val repoPullRequestSubject: Observable<RepoPullRequest>
@@ -40,22 +40,32 @@ class DataSourceImpl(
 
     private val repoPersistenceModelMapper = RepoPersistenceModelMapper()
 
-    private val _repoListTotalCount = BehaviorSubject(UNKNOWN_TOTAL_ITEM_COUNT).scope { it.onComplete() }
+    private val _repoListTotalCount =
+        BehaviorSubject(UNKNOWN_TOTAL_ITEM_COUNT).scope { it.onComplete() }
     override val repoListTotalCount: BehaviorObservable<Int> = _repoListTotalCount
 
     private val _repoListSubject = BehaviorSubject(emptySet<Repo>()).scope { it.onComplete() }
-    override val repoListSubject: BehaviorObservable<Set<Repo>> =_repoListSubject
+    override val repoListSubject: BehaviorObservable<Set<Repo>> = _repoListSubject
 
-    private val _repoPullRequestSubject = PublishSubject<RepoPullRequest>().scope { it.onComplete() }
+    private val _repoPullRequestSubject =
+        PublishSubject<RepoPullRequest>().scope { it.onComplete() }
     override val repoPullRequestSubject: Observable<RepoPullRequest> = _repoPullRequestSubject
 
 
-
-
     init {
-        db.getRepos(1).map { origin -> repoPersistenceModelMapper.transform(origin) }.apply {
-            _repoListSubject.onNext(this.toSet())
-        }
+        singleFromCoroutine { db.getRepos(1) }
+            .observeOn(scheduler)
+            .map {
+                it.map { origin -> repoPersistenceModelMapper.transform(origin) }
+            }
+            .subscribe(
+                onSuccess = { result ->
+                    _repoListSubject.onNext(repoListSubject.value + result)
+                },
+                onError = {
+
+                }
+            )
     }
 
     override fun fetchRepoList(page: Int) {
@@ -67,9 +77,14 @@ class DataSourceImpl(
             .map {
                 it.map { origin -> repoPersistenceModelMapper.transform(origin) }
             }
-            .subscribe { result ->
-                _repoListSubject.onNext(repoListSubject.value + result)
-            }
+            .subscribe(
+                onSuccess = { result ->
+                    _repoListSubject.onNext(repoListSubject.value + result)
+                },
+                onError = {
+
+                }
+            )
 
         singleFromCoroutine { api.searchRepositories(page = page) }
             .observeOn(scheduler)
@@ -84,9 +99,14 @@ class DataSourceImpl(
             .map {
                 it.map { origin -> repoPersistenceModelMapper.transform(origin) }
             }
-            .subscribe { result ->
-                 _repoListSubject.onNext(repoListSubject.value + result)
-            }
+            .subscribe(
+                onSuccess = { result ->
+                    _repoListSubject.onNext(repoListSubject.value + result)
+                },
+                onError = {
+
+                }
+            )
 
     }
 

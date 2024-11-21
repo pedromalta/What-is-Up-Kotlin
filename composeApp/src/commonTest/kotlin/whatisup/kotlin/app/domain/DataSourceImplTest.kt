@@ -7,7 +7,9 @@ import dev.mokkery.every
 import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
@@ -70,11 +72,13 @@ class DataSourceImplTest {
 
     private val dataSource = DataSourceImpl(db, api, testingScheduler)
 
+    @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
     @BeforeTest
     fun before() {
         Dispatchers.setMain(newSingleThreadContext("Test thread"))
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @AfterTest
     fun after() {
         Dispatchers.resetMain()
