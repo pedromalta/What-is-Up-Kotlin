@@ -1,12 +1,6 @@
 package whatisup.kotlin.app.domain
 
 import com.badoo.reaktive.test.scheduler.TestScheduler
-import dev.mokkery.answering.returns
-import dev.mokkery.answering.sequentiallyReturns
-import dev.mokkery.every
-import dev.mokkery.everySuspend
-import dev.mokkery.matcher.any
-import dev.mokkery.mock
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,13 +9,8 @@ import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import kotlinx.serialization.json.Json
-import whatisup.kotlin.app.data.api.kotlinReposPage1
-import whatisup.kotlin.app.data.api.kotlinReposPage2
-import whatisup.kotlin.app.data.api.models.RepoList
-import whatisup.kotlin.app.data.api.services.GithubApi
-import whatisup.kotlin.app.data.mappers.RepoApiPersistenceMapper
-import whatisup.kotlin.app.data.persistence.LocalDB
+import whatisup.kotlin.app.data.api.githubApiMock
+import whatisup.kotlin.app.data.db.localDBMock
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -30,47 +19,10 @@ import kotlin.test.assertTrue
 
 class DataSourceImplTest {
 
-    private val json = Json {
-        ignoreUnknownKeys = true
-        isLenient = true
-    }
-
     private val testingScheduler = TestScheduler(isManualProcessing = true)
 
-    private val mockApiResultPage1 = json.decodeFromString<RepoList>(kotlinReposPage1)
-    private val mockApiResultPage2 = json.decodeFromString<RepoList>(kotlinReposPage2)
-
-    private val mockApiDBResultPage1 = mockApiResultPage1
-        .items.map { RepoApiPersistenceMapper(1).transform(it) }
-
-    private val mockApiDBResultPage2 = mockApiResultPage2
-        .items.map { RepoApiPersistenceMapper(1).transform(it) }
-
-    // TODO Mock muito atrelado a implementação do DataSourceImpl, teste fica quebradiço, refatorar com um implementação fake da DB
-    private val db = mock<LocalDB> {
-        every { getRepos(1) } sequentiallyReturns listOf(
-            emptyList(),
-            emptyList(),
-            mockApiDBResultPage1,
-            mockApiDBResultPage1,
-            mockApiDBResultPage1
-
-        )
-        every { getRepos(2) } sequentiallyReturns listOf(
-            emptyList(),
-            mockApiDBResultPage2,
-            mockApiDBResultPage2,
-            mockApiDBResultPage2
-        )
-        every { addOrUpdateRepos(any()) } returns Unit
-    }
-
-    private val api = mock<GithubApi> {
-        everySuspend { searchRepositories(page = 1) } returns mockApiResultPage1
-        everySuspend { searchRepositories(page = 2) } returns mockApiResultPage2
-    }
-
-    private val dataSource = DataSourceImpl(db, api, testingScheduler)
+    //TODO use Koin test to inject and control these dependencies
+    private val dataSource = DataSourceImpl(localDBMock, githubApiMock, testingScheduler)
 
     @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
     @BeforeTest

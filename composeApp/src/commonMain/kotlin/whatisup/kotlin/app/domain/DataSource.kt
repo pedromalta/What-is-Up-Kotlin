@@ -51,23 +51,6 @@ class DataSourceImpl(
         PublishSubject<RepoPullRequest>().scope { it.onComplete() }
     override val repoPullRequestSubject: Observable<RepoPullRequest> = _repoPullRequestSubject
 
-
-    init {
-        singleFromCoroutine { db.getRepos(1) }
-            .observeOn(scheduler)
-            .map {
-                it.map { origin -> repoPersistenceModelMapper.transform(origin) }
-            }
-            .subscribe(
-                onSuccess = { result ->
-                    _repoListSubject.onNext(repoListSubject.value + result)
-                },
-                onError = {
-
-                }
-            )
-    }
-
     override fun fetchRepoList(page: Int) {
         //val ioScheduler = Dispatchers.IO.asScheduler()
         val repoApiPersistenceMapper = RepoApiPersistenceMapper(page)
