@@ -2,7 +2,6 @@ package whatisup.kotlin.app.domain.datasource
 
 import com.badoo.reaktive.coroutinesinterop.singleFromCoroutine
 import com.badoo.reaktive.disposable.scope.DisposableScope
-import com.badoo.reaktive.observable.Observable
 import com.badoo.reaktive.observable.observeOn
 import com.badoo.reaktive.observable.subscribe
 import com.badoo.reaktive.observable.subscribeOn
@@ -10,16 +9,14 @@ import com.badoo.reaktive.scheduler.Scheduler
 import com.badoo.reaktive.single.merge
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
-import com.badoo.reaktive.subject.publish.PublishSubject
 import io.github.aakira.napier.Napier
 import whatisup.kotlin.app.data.api.services.GithubApi
 import whatisup.kotlin.app.data.mappers.RepoApiPersistenceMapper
 import whatisup.kotlin.app.data.mappers.RepoPersistenceModelMapper
 import whatisup.kotlin.app.data.persistence.LocalDB
 import whatisup.kotlin.app.domain.models.Repo
-import whatisup.kotlin.app.domain.models.RepoPullRequest
 
-interface DataSource {
+interface RepoListDataSource {
 
     companion object {
         const val UNKNOWN_TOTAL_ITEM_COUNT = -1
@@ -30,21 +27,19 @@ interface DataSource {
 
     //Use set to avoid duplicates
     val repoListSubject: BehaviorObservable<Set<Repo>>
-    val repoPullRequestSubject: Observable<RepoPullRequest>
     val loadingState: BehaviorObservable<Boolean>
 
     fun fetchRepoList(page: Int)
-    fun fetchRepoPullRequest(owner: String, repo: String)
 }
 
-class DataSourceImpl(
+class RepoListDataSourceImpl(
     private val db: LocalDB,
     private val api: GithubApi,
     private val scheduler: Scheduler,
-) : DataSource, DisposableScope by DisposableScope() {
+) : RepoListDataSource, DisposableScope by DisposableScope() {
 
     companion object {
-        private const val TAG = "DataSource"
+        private const val TAG = "RepoListDataSource"
     }
 
     private val repoPersistenceModelMapper = RepoPersistenceModelMapper()
@@ -53,15 +48,11 @@ class DataSourceImpl(
     override val loadingState: BehaviorObservable<Boolean> = _loadingState
 
     private val _repoListTotalCount =
-        BehaviorSubject(DataSource.UNKNOWN_TOTAL_ITEM_COUNT).scope { it.onComplete() }
+        BehaviorSubject(RepoListDataSource.UNKNOWN_TOTAL_ITEM_COUNT).scope { it.onComplete() }
     override val repoListTotalCount: BehaviorObservable<Int> = _repoListTotalCount
 
     private val _repoListSubject = BehaviorSubject(emptySet<Repo>()).scope { it.onComplete() }
     override val repoListSubject: BehaviorObservable<Set<Repo>> = _repoListSubject
-
-    private val _repoPullRequestSubject =
-        PublishSubject<RepoPullRequest>().scope { it.onComplete() }
-    override val repoPullRequestSubject: Observable<RepoPullRequest> = _repoPullRequestSubject
 
     override fun fetchRepoList(page: Int) {
         Napier.d(message = "fetchRepoList(page: $page)", tag = TAG)
@@ -108,10 +99,6 @@ class DataSourceImpl(
                     stopLoading()
                 },
             )
-    }
-
-    override fun fetchRepoPullRequest(owner: String, repo: String) {
-        Napier.d(message = "fetchRepoPullRequest(owner: $owner, repo: $repo)", tag = TAG)
     }
 
     private fun startLoading() {

@@ -11,19 +11,19 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import whatisup.kotlin.app.data.api.githubApiMock
 import whatisup.kotlin.app.data.db.localDBMock
-import whatisup.kotlin.app.domain.datasource.DataSourceImpl
+import whatisup.kotlin.app.domain.datasource.RepoListDataSourceImpl
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class DataSourceImplTest {
+class RepoListDataSourceImplTest {
 
     private val testingScheduler = TestScheduler(isManualProcessing = true)
 
     //TODO use Koin test to inject and control these dependencies
-    private val dataSource = DataSourceImpl(localDBMock, githubApiMock, testingScheduler)
+    private val dataSource = RepoListDataSourceImpl(localDBMock, githubApiMock, testingScheduler)
 
     @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
     @BeforeTest

@@ -35,6 +35,7 @@ fun SharedTransitionScope.RepoCardComponent(
         onClick = {
             navigateToPullRequestsDetailScreen.invoke(
                 PullRequestsId(
+                    repoId = repo.id,
                     owner = repo.ownerLogin,
                     repo = repo.name,
                 )

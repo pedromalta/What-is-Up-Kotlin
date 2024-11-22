@@ -10,15 +10,21 @@ import com.badoo.reaktive.scheduler.computationScheduler
 import com.badoo.reaktive.scheduler.mainScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import whatisup.kotlin.app.domain.datasource.DataSource
-import whatisup.kotlin.app.ui.mappers.RepoUIMapper
+import whatisup.kotlin.app.domain.datasource.RepoListDataSource
+import whatisup.kotlin.app.domain.datasource.RepoPullRequestsDataSource
+import whatisup.kotlin.app.ui.mappers.RepoListMapper
+import whatisup.kotlin.app.ui.mappers.RepoPullRequestMapper
 import whatisup.kotlin.app.ui.model.MainState
+import whatisup.kotlin.app.ui.model.PullRequests
+import whatisup.kotlin.app.ui.model.PullRequestsId
 
 class MainViewModel(
-    private val dataSource: DataSource,
+    private val repoListDataSource: RepoListDataSource,
+    private val repoPullRequestsDataSource: RepoPullRequestsDataSource,
 ): ViewModel(), DisposableScope by DisposableScope() {
 
-    private val mapper = RepoUIMapper()
+    private val repoListMapper = RepoListMapper()
+    private val repoPullRequestsMapper = RepoPullRequestMapper()
 
     private val _state = MutableStateFlow(MainState())
     val state = _state.asStateFlow()
@@ -27,33 +33,73 @@ class MainViewModel(
         fetchRepos(1)
     }
 
-    val repoListObserver = dataSource.repoListSubject
+    val repoListObserver = repoListDataSource.repoListSubject
         .subscribeOn(computationScheduler)
         .observeOn(computationScheduler)
-        .map { repos ->
-            repos.map { repoDomain ->
-                mapper.transform(repoDomain)
+        .map { repoList ->
+            repoList.map { repoDomain ->
+                repoListMapper.transform(repoDomain)
             }
         }
         .observeOn(mainScheduler)
-        .subscribe { repos ->
+        .subscribe { repoListUi ->
             _state.value = _state.value.copy(
-                repos = repos,
-                currentPage = repos.size / DataSource.PER_PAGE,
+                repos = repoListUi,
+                currentPage = repoListUi.size / RepoListDataSource.PER_PAGE,
             )
         }.scope()
 
-    val loadingObserver = dataSource.loadingState
+    val loadingRepoListObserver = repoListDataSource.loadingState
         .subscribeOn(computationScheduler)
         .observeOn(mainScheduler)
         .subscribe { loadingState ->
             _state.value = _state.value.copy(
-                loading = loadingState,
+                loadingRepoList = loadingState,
+            )
+        }.scope()
+
+
+    val repoPullRequestsObserver = repoPullRequestsDataSource.repoPullRequestSubject
+        .subscribeOn(computationScheduler)
+        .observeOn(computationScheduler)
+        .map { repoPullRequests ->
+            val pullRequestListUi = repoPullRequests.pullRequests.map { repoDomain ->
+                repoPullRequestsMapper.transform(repoDomain)
+            }
+            PullRequests(
+                id = repoPullRequests.repoId,
+                repoId = repoPullRequests.repoId,
+                userName = repoPullRequests.userName,
+                repoName = repoPullRequests.repoName,
+                pullRequests = pullRequestListUi,
+            )
+        }
+        .observeOn(mainScheduler)
+        .subscribe { pullRequests ->
+            _state.value = _state.value.copy(
+                pullRequests = pullRequests,
+            )
+        }.scope()
+
+    val loadingPullRequestsObserver = repoPullRequestsDataSource.loadingState
+        .subscribeOn(computationScheduler)
+        .observeOn(mainScheduler)
+        .subscribe { loadingState ->
+            _state.value = _state.value.copy(
+                loadingPullRequests = loadingState,
             )
         }.scope()
 
     fun fetchRepos(page: Int) {
-        dataSource.fetchRepoList(page)
+        repoListDataSource.fetchRepoList(page)
+    }
+
+    fun fetchRepoPullRequests(pullRequestsId: PullRequestsId) {
+        repoPullRequestsDataSource.fetchRepoPullRequest(
+            repoId = pullRequestsId.repoId,
+            owner = pullRequestsId.owner,
+            repo = pullRequestsId.repo,
+        )
     }
 
     override fun onCleared() {

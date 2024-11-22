@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import whatisup.kotlin.app.ui.defaultDebounceInMillis
+import whatisup.kotlin.app.ui.model.StableId
 
 @OptIn(FlowPreview::class)
 @Composable

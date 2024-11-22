@@ -16,10 +16,10 @@ interface GithubApi {
         page: Int,
     ): RepoList
 
-    suspend fun getRepoPullRequest(
+    suspend fun getRepoPullRequests(
         owner: String,
         repo: String
-    ): RepoPullRequest
+    ): List<RepoPullRequest>
 }
 
 class GithubApiImpl(
@@ -47,7 +47,7 @@ class GithubApiImpl(
         }
     }
 
-    override suspend fun getRepoPullRequest(owner: String, repo: String): RepoPullRequest {
+    override suspend fun getRepoPullRequests(owner: String, repo: String): List<RepoPullRequest> {
         return withContext(dispatcher) {
             // Example URL: https://api.github.com/repos/JetBrains/kotlin/pulls
 
@@ -55,7 +55,7 @@ class GithubApiImpl(
                 url {
                     appendPathSegments("repos", owner, repo, "pulls")
                 }
-            }.body<RepoPullRequest>()
+            }.body<List<RepoPullRequest>>()
         }
     }
 

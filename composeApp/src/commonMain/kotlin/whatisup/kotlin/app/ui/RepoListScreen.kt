@@ -10,16 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
-import whatisup.kotlin.app.domain.datasource.DataSource
+import whatisup.kotlin.app.domain.datasource.RepoListDataSource
 import whatisup.kotlin.app.ui.components.PagedLazyColumn
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.viewmodels.MainViewModel
@@ -34,7 +33,7 @@ fun SharedTransitionScope.RepoListScreen(
     navigateToPullRequestsDetailScreen: NavigateToPullRequestsDetailScreen,
 ) {
     val viewModel = koinViewModel<MainViewModel>()
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val lazyListState = rememberLazyListState()
 
@@ -50,11 +49,11 @@ fun SharedTransitionScope.RepoListScreen(
             PagedLazyColumn(
                 modifier = modifier,
                 lazyListState = lazyListState,
-                items = state.value.repos,
-                perPage = DataSource.PER_PAGE,
-                isLoading = state.value.loading,
+                items = state.repos,
+                perPage = RepoListDataSource.PER_PAGE,
+                isLoading = state.loadingRepoList,
                 onLoadMoreItems = {
-                    viewModel.fetchRepos(state.value.currentPage + 1)
+                    viewModel.fetchRepos(state.currentPage + 1)
                 },
                 isLoadingContent = {
                     Column(

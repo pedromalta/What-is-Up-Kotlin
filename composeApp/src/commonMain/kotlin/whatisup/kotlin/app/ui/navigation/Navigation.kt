@@ -42,18 +42,20 @@ fun Navigation(
 
             // RepoPullRequestsDetailScreen
             composable(
-                route = "${NavigationScreens.RepoDetailScreen.route}/{owner}/{repo}",
+                route = "${NavigationScreens.RepoDetailScreen.route}/{repoId}/{owner}/{repo}",
                 arguments = listOf(
+                    navArgument("repoId") { type = NavType.LongType },
                     navArgument("owner") { type = NavType.StringType },
                     navArgument("repo") { type = NavType.StringType },
                 )
             ) { backStackEntry ->
                 val arguments = backStackEntry.arguments ?: return@composable
                 val pullRequestsId = arguments.let { args ->
+                    val repoId = args.getLong("repoId")
                     val owner = args.getString("owner")
                     val repo = args.getString("repo")
                     if (owner == null || repo == null) return@composable
-                    PullRequestsId(owner, repo)
+                    PullRequestsId(repoId, owner, repo)
                 }
                 RepoPullRequestsDetailScreen(
                     animatedVisibilityScope = this,
@@ -69,5 +71,6 @@ fun Navigation(
 }
 
 private fun getDetailScreenRoute(pullRequestsId: PullRequestsId): String {
-    return "${NavigationScreens.RepoDetailScreen.route}/${pullRequestsId.owner}/${pullRequestsId.repo}"
+    return with(pullRequestsId) {
+        "${NavigationScreens.RepoDetailScreen.route}/$repoId/$owner/$repo" }
 }

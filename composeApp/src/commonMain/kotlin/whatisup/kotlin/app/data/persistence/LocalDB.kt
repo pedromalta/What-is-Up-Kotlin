@@ -5,8 +5,9 @@ import whatisup.kotlin.app.data.persistence.models.RepoPullRequest
 
 interface LocalDB {
     fun getRepos(page: Int): List<Repo>
-    fun getPullRequests(repoId: Long): RepoPullRequest?
+    fun getRepoPullRequests(repoId: Long): List<RepoPullRequest>?
     fun addOrUpdateRepos(repos: List<Repo>)
+    fun addOrUpdateRepoPullRequests(repoId: Long, pullRequests: List<RepoPullRequest>)
 }
 
 class RoomDB : LocalDB {
@@ -14,11 +15,15 @@ class RoomDB : LocalDB {
         return emptyList()
     }
 
-    override fun getPullRequests(repoId: Long): RepoPullRequest? {
+    override fun getRepoPullRequests(repoId: Long): List<RepoPullRequest>? {
         return null
     }
 
     override fun addOrUpdateRepos(repos: List<Repo>) {
+
+    }
+
+    override fun addOrUpdateRepoPullRequests(repoId: Long, pullRequests: List<RepoPullRequest>) {
 
     }
 
