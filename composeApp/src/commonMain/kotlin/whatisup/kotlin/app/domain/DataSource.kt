@@ -3,11 +3,11 @@ package whatisup.kotlin.app.domain
 import com.badoo.reaktive.coroutinesinterop.singleFromCoroutine
 import com.badoo.reaktive.disposable.scope.DisposableScope
 import com.badoo.reaktive.observable.Observable
+import com.badoo.reaktive.observable.observeOn
+import com.badoo.reaktive.observable.subscribe
+import com.badoo.reaktive.observable.subscribeOn
 import com.badoo.reaktive.scheduler.Scheduler
-import com.badoo.reaktive.single.map
-import com.badoo.reaktive.single.observeOn
-import com.badoo.reaktive.single.subscribe
-import com.badoo.reaktive.single.subscribeOn
+import com.badoo.reaktive.single.merge
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import com.badoo.reaktive.subject.publish.PublishSubject
@@ -64,44 +64,34 @@ class DataSourceImpl(
 
         val repoApiPersistenceMapper = RepoApiPersistenceMapper(page)
 
-        singleFromCoroutine { db.getRepos(page) }
-            .subscribeOn(scheduler)
-            .observeOn(scheduler)
-            .map {
-                it.map { origin -> repoPersistenceModelMapper.transform(origin) }
-            }
-            .subscribe(
-                onSuccess = { result ->
-                    _repoListSubject.onNext(repoListSubject.value + result)
-                },
-                onError = {
-
+        merge(
+            // Get local data
+            singleFromCoroutine { db.getRepos(page) },
+            // Get api data
+            singleFromCoroutine {
+                val repoList = api.searchRepositories(page = page)
+                _repoListTotalCount.onNext(repoList.totalCount)
+                val persistenceList = repoList.items.map {
+                    origin -> repoApiPersistenceMapper.transform(origin)
                 }
-            )
-
-        singleFromCoroutine { api.searchRepositories(page = page) }
-            .subscribeOn(scheduler)
-            .observeOn(scheduler)
-            .map {
-                _repoListTotalCount.onNext(it.totalCount)
-                it.items.map { origin -> repoApiPersistenceMapper.transform(origin) }
-            }
-            .map {
-                db.addOrUpdateRepos(it)
+                //Add to local DB
+                db.addOrUpdateRepos(persistenceList)
                 db.getRepos(page)
-            }
-            .map {
-                it.map { origin -> repoPersistenceModelMapper.transform(origin) }
-            }
-            .subscribe(
-                onSuccess = { result ->
-                    _repoListSubject.onNext(repoListSubject.value + result)
-                },
-                onError = {
+            },
+        )
+        .subscribeOn(scheduler)
+        .observeOn(scheduler)
+        .subscribe (
+            onNext = { fullRepoList ->
+                val updatedRepoList = fullRepoList.map { origin -> repoPersistenceModelMapper.transform(origin) }
+                // We add the updated list to the current set so we don't mess with the old positions, the set nature
+                // of the data structure will keep the positions and prevent duplicates
+                _repoListSubject.onNext(repoListSubject.value + updatedRepoList)
+            },
+            onError = {
 
-                }
-            )
-
+            }
+        )
     }
 
     override fun fetchRepoPullRequest(owner: String, repo: String) {
