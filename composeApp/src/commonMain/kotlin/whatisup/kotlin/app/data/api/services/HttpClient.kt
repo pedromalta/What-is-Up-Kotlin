@@ -1,5 +1,6 @@
 package whatisup.kotlin.app.data.api.services
 
+import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpTimeout
@@ -34,7 +35,7 @@ class DefaultHttpClient(
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
-                    println(message)
+                    Napier.d(message = message, tag = TAG)
                 }
             }
         }

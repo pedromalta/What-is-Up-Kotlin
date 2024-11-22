@@ -76,12 +76,15 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.window.size)
 
             implementation(libs.bundles.compose.common)
             implementation(libs.bundles.koin.common)
             implementation(libs.bundles.reaktive.common)
             implementation(libs.bundles.ktor.common)
             implementation(libs.bundles.room.common)
+
+            implementation(libs.napier)
 
         }
 
