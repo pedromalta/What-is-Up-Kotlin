@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import whatisup.kotlin.app.data.api.githubApiMock
 import whatisup.kotlin.app.data.db.localDBMock
+import whatisup.kotlin.app.domain.datasource.DataSourceImpl
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

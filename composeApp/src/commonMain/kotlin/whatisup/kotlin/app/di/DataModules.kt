@@ -5,8 +5,8 @@ import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import org.koin.dsl.module
-import whatisup.kotlin.app.domain.DataSource
-import whatisup.kotlin.app.domain.DataSourceImpl
+import whatisup.kotlin.app.domain.datasource.DataSource
+import whatisup.kotlin.app.domain.datasource.DataSourceImpl
 import whatisup.kotlin.app.data.api.services.DefaultHttpClient
 import whatisup.kotlin.app.data.api.services.GithubApi
 import whatisup.kotlin.app.data.api.services.GithubApiImpl

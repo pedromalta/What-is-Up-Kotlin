@@ -35,7 +35,12 @@ class DefaultHttpClient(
             level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) {
-                    Napier.d(message = message, tag = TAG)
+                    Napier.d(message =
+"""--------- Start Request -----------
+$message
+--------- End Request -------------""",
+                        tag = TAG
+                    )
                 }
             }
         }

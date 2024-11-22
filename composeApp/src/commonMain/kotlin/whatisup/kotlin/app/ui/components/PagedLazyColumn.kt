@@ -13,11 +13,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import whatisup.kotlin.app.ui.defaultDebounceInMillis
 
+@OptIn(FlowPreview::class)
 @Composable
-fun <T: StableId> PagedLazyColumn(
+fun <T : StableId> PagedLazyColumn(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
+    debounceInMillis: Long = defaultDebounceInMillis(),
     items: List<T>,
     perPage: Int,
     isLoading: Boolean,
@@ -29,10 +34,16 @@ fun <T: StableId> PagedLazyColumn(
 
     // Observe the scroll position
     LaunchedEffect(lazyListState) {
-        snapshotFlow { lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0 }
+        snapshotFlow {
+            lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+        }
+            .debounce(debounceInMillis)
             .collect { lastVisibleIndex ->
                 val totalItems = lazyListState.layoutInfo.totalItemsCount
-                if (totalItems - lastVisibleIndex <= 4 && totalItems >= previousItemCount) {
+                if (
+                    totalItems - lastVisibleIndex <= 4
+                    && totalItems >= previousItemCount
+                ) {
                     previousItemCount = totalItems
                     onLoadMoreItems()
                 }

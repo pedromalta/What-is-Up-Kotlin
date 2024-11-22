@@ -1,6 +1,6 @@
 package whatisup.kotlin.app.ui.model
 
-import whatisup.kotlin.app.domain.DataSource
+import whatisup.kotlin.app.domain.datasource.DataSource
 
 data class MainState(
     val loading: Boolean = false,

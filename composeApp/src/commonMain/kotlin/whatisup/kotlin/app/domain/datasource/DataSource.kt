@@ -1,4 +1,4 @@
-package whatisup.kotlin.app.domain
+package whatisup.kotlin.app.domain.datasource
 
 import com.badoo.reaktive.coroutinesinterop.singleFromCoroutine
 import com.badoo.reaktive.disposable.scope.DisposableScope
@@ -31,6 +31,7 @@ interface DataSource {
     //Use set to avoid duplicates
     val repoListSubject: BehaviorObservable<Set<Repo>>
     val repoPullRequestSubject: Observable<RepoPullRequest>
+    val loadingState: BehaviorObservable<Boolean>
 
     fun fetchRepoList(page: Int)
     fun fetchRepoPullRequest(owner: String, repo: String)
@@ -48,6 +49,9 @@ class DataSourceImpl(
 
     private val repoPersistenceModelMapper = RepoPersistenceModelMapper()
 
+    private val _loadingState = BehaviorSubject(false).scope { it.onComplete() }
+    override val loadingState: BehaviorObservable<Boolean> = _loadingState
+
     private val _repoListTotalCount =
         BehaviorSubject(DataSource.UNKNOWN_TOTAL_ITEM_COUNT).scope { it.onComplete() }
     override val repoListTotalCount: BehaviorObservable<Int> = _repoListTotalCount
@@ -61,41 +65,61 @@ class DataSourceImpl(
 
     override fun fetchRepoList(page: Int) {
         Napier.d(message = "fetchRepoList(page: $page)", tag = TAG)
+        if (loadingState.value) {
+            Napier.w(message = "Busy!!", tag = TAG)
+            return
+        }
+        startLoading()
 
         val repoApiPersistenceMapper = RepoApiPersistenceMapper(page)
 
         merge(
             // Get local data
-            singleFromCoroutine { db.getRepos(page) },
+            singleFromCoroutine {
+                db.getRepos(page)
+            },
             // Get api data
             singleFromCoroutine {
                 val repoList = api.searchRepositories(page = page)
                 _repoListTotalCount.onNext(repoList.totalCount)
-                val persistenceList = repoList.items.map {
-                    origin -> repoApiPersistenceMapper.transform(origin)
+                val persistenceList = repoList.items.map { origin ->
+                    repoApiPersistenceMapper.transform(origin)
                 }
                 //Add to local DB
                 db.addOrUpdateRepos(persistenceList)
-                db.getRepos(page)
+                val localList = db.getRepos(page)
+                localList
             },
         )
-        .subscribeOn(scheduler)
-        .observeOn(scheduler)
-        .subscribe (
-            onNext = { fullRepoList ->
-                val updatedRepoList = fullRepoList.map { origin -> repoPersistenceModelMapper.transform(origin) }
-                // We add the updated list to the current set so we don't mess with the old positions, the set nature
-                // of the data structure will keep the positions and prevent duplicates
-                _repoListSubject.onNext(repoListSubject.value + updatedRepoList)
-            },
-            onError = {
+            .subscribeOn(scheduler)
+            .observeOn(scheduler)
+            .subscribe(
+                onNext = { fullRepoList ->
+                    val updatedRepoList =
+                        fullRepoList.map { origin -> repoPersistenceModelMapper.transform(origin) }
+                    // We add the updated list to the current set so we don't mess with the old positions, the set nature
+                    // of the data structure will keep the positions and prevent duplicates
+                    _repoListSubject.onNext(repoListSubject.value + updatedRepoList)
+                },
+                onError = {
 
-            }
-        )
+                },
+                onComplete = {
+                    stopLoading()
+                },
+            )
     }
 
     override fun fetchRepoPullRequest(owner: String, repo: String) {
         Napier.d(message = "fetchRepoPullRequest(owner: $owner, repo: $repo)", tag = TAG)
+    }
+
+    private fun startLoading() {
+        _loadingState.onNext(true)
+    }
+
+    private fun stopLoading() {
+        _loadingState.onNext(false)
     }
 
 }

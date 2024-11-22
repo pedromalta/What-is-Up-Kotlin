@@ -9,7 +9,10 @@ class RepoUIMapper: Mapper<RepoDomain, RepoUI> {
         return RepoUI(
             id = origin.id,
             name = origin.name,
-            fullName = origin.fullName,
+            ownerLogin = origin.ownerLogin,
+            description = origin.description ?: "",
+            forksCount = origin.forksCount,
+            starsCount = origin.stargazersCount
         )
     }
 

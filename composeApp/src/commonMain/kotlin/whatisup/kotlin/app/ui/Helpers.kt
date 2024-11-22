@@ -10,3 +10,5 @@ import androidx.compose.runtime.Composable
 fun isPortrait(): Boolean {
     return calculateWindowSizeClass().widthSizeClass == WindowWidthSizeClass.Compact
 }
+
+fun defaultDebounceInMillis() = 600L
