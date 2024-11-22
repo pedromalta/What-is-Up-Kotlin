@@ -1,7 +1,6 @@
 package whatisup.kotlin.app.di
 
-import com.badoo.reaktive.coroutinesinterop.asScheduler
-import com.badoo.reaktive.scheduler.ioScheduler
+
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -11,8 +10,9 @@ import whatisup.kotlin.app.domain.DataSourceImpl
 import whatisup.kotlin.app.data.api.services.DefaultHttpClient
 import whatisup.kotlin.app.data.api.services.GithubApi
 import whatisup.kotlin.app.data.api.services.GithubApiImpl
+import whatisup.kotlin.app.data.mocks.MockDB
 import whatisup.kotlin.app.data.persistence.LocalDB
-import whatisup.kotlin.app.data.persistence.RoomDB
+import com.badoo.reaktive.scheduler.computationScheduler
 
 class DataModules {
 
@@ -22,11 +22,11 @@ class DataModules {
     }
 
     private val localDatasource = module {
-        single<LocalDB> { RoomDB() }
+        single<LocalDB> { MockDB() }
     }
 
     val dataSource = module {
-        factory<DataSource> { DataSourceImpl(get(), get(), Dispatchers.IO.asScheduler()) }
+        factory<DataSource> { DataSourceImpl(get(), get(), computationScheduler) }
     } + remoteDatasource + localDatasource
 
 }

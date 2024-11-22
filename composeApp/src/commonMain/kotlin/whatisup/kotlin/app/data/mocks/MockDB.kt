@@ -1,17 +1,15 @@
-package whatisup.kotlin.app.data.persistence
+package whatisup.kotlin.app.data.mocks
 
+import whatisup.kotlin.app.data.persistence.LocalDB
 import whatisup.kotlin.app.data.persistence.models.Repo
 import whatisup.kotlin.app.data.persistence.models.RepoPullRequest
 
-interface LocalDB {
-    fun getRepos(page: Int): List<Repo>
-    fun getPullRequests(repoId: Long): RepoPullRequest?
-    fun addOrUpdateRepos(repos: List<Repo>)
-}
+class MockDB: LocalDB {
 
-class RoomDB : LocalDB {
+    private val repoSet = mutableSetOf<Repo>()
+
     override fun getRepos(page: Int): List<Repo> {
-        return emptyList()
+        return repoSet.toList()
     }
 
     override fun getPullRequests(repoId: Long): RepoPullRequest? {
@@ -19,7 +17,6 @@ class RoomDB : LocalDB {
     }
 
     override fun addOrUpdateRepos(repos: List<Repo>) {
-
+        repoSet.addAll(repos)
     }
-
 }
