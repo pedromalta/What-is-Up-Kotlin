@@ -30,7 +30,7 @@ import whatisup.kotlin.app.ui.viewmodels.MainViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class, KoinExperimentalAPI::class)
 @Composable
-fun SharedTransitionScope.PullRequestsDetailScreen(
+fun SharedTransitionScope.PullRequestsScreen(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     animatedVisibilityScope: AnimatedVisibilityScope,

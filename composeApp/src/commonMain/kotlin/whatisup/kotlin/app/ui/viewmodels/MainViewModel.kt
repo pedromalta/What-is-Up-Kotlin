@@ -19,12 +19,12 @@ import whatisup.kotlin.app.ui.model.PullRequests
 import whatisup.kotlin.app.ui.model.PullRequestsId
 
 class MainViewModel(
-    private val repoListDataSource: RepositoriesDataSource,
-    private val repoPullRequestsDataSource: PullRequestsDataSource,
+    private val repositoriesDataSource: RepositoriesDataSource,
+    private val pullRequestsDataSource: PullRequestsDataSource,
 ): ViewModel(), DisposableScope by DisposableScope() {
 
-    private val repoListMapper = RepositoryMapper()
-    private val repoPullRequestsMapper = PullRequestMapper()
+    private val repositoriesMapper = RepositoryMapper()
+    private val pullRequestsMapper = PullRequestMapper()
 
     private val _state = MutableStateFlow(MainState())
     val state = _state.asStateFlow()
@@ -33,23 +33,23 @@ class MainViewModel(
         fetchRepositories(1)
     }
 
-    val repoListObserver = repoListDataSource.repositoriesSubject
+    val repositoriesObserver = repositoriesDataSource.repositoriesSubject
         .subscribeOn(computationScheduler)
         .observeOn(computationScheduler)
-        .map { repoList ->
-            repoList.map { repoDomain ->
-                repoListMapper.transform(repoDomain)
+        .map { repositories ->
+            repositories.map { repositoryDomain ->
+                repositoriesMapper.transform(repositoryDomain)
             }
         }
         .observeOn(mainScheduler)
-        .subscribe { repoListUi ->
+        .subscribe { repositoriesUi ->
             _state.value = _state.value.copy(
-                repos = repoListUi,
-                currentPage = repoListUi.size / RepositoriesDataSource.PER_PAGE,
+                repos = repositoriesUi,
+                currentPage = (repositoriesUi.size / RepositoriesDataSource.PER_PAGE).coerceAtLeast(1),
             )
         }.scope()
 
-    val loadingRepoListObserver = repoListDataSource.loadingState
+    val loadingRepositoriesObserver = repositoriesDataSource.loadingState
         .subscribeOn(computationScheduler)
         .observeOn(mainScheduler)
         .subscribe { loadingState ->
@@ -59,12 +59,12 @@ class MainViewModel(
         }.scope()
 
 
-    val repoPullRequestsObserver = repoPullRequestsDataSource.pullRequestsSubject
+    val pullRequestsObserver = pullRequestsDataSource.pullRequestsSubject
         .subscribeOn(computationScheduler)
         .observeOn(computationScheduler)
         .map { repoPullRequests ->
             val pullRequestListUi = repoPullRequests.pullRequests.map { repoDomain ->
-                repoPullRequestsMapper.transform(repoDomain)
+                pullRequestsMapper.transform(repoDomain)
             }
             PullRequests(
                 id = repoPullRequests.repoId,
@@ -81,7 +81,7 @@ class MainViewModel(
             )
         }.scope()
 
-    val loadingPullRequestsObserver = repoPullRequestsDataSource.loadingState
+    val loadingPullRequestsObserver = pullRequestsDataSource.loadingState
         .subscribeOn(computationScheduler)
         .observeOn(mainScheduler)
         .subscribe { loadingState ->
@@ -91,11 +91,11 @@ class MainViewModel(
         }.scope()
 
     fun fetchRepositories(page: Int) {
-        repoListDataSource.fetchRepositories(page)
+        repositoriesDataSource.fetchRepositories(page)
     }
 
     fun fetchPullRequests(pullRequestsId: PullRequestsId) {
-        repoPullRequestsDataSource.fetchPullRequests(
+        pullRequestsDataSource.fetchPullRequests(
             repoId = pullRequestsId.repoId,
             owner = pullRequestsId.owner,
             repo = pullRequestsId.repo,

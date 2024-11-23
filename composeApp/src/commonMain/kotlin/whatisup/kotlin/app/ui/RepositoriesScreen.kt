@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
 import whatisup.kotlin.app.ui.components.PagedLazyColumn
 import whatisup.kotlin.app.ui.model.PullRequestsId
@@ -26,7 +25,7 @@ import whatisup.kotlin.app.ui.viewmodels.MainViewModel
 
 typealias NavigateToPullRequestsDetailScreen = (pullRequestsId: PullRequestsId) -> Unit
 
-@OptIn(ExperimentalSharedTransitionApi::class, KoinExperimentalAPI::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.RepositoriesScreen(
     modifier: Modifier = Modifier,

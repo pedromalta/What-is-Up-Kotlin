@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import whatisup.kotlin.app.ui.RepositoriesScreen
-import whatisup.kotlin.app.ui.PullRequestsDetailScreen
+import whatisup.kotlin.app.ui.PullRequestsScreen
 import whatisup.kotlin.app.ui.model.PullRequestsId
 
 enum class NavigationScreens(val route: String) {
@@ -57,7 +57,7 @@ fun Navigation(
                     if (owner == null || repo == null || repoId == 0L) return@composable
                     PullRequestsId(repoId, owner, repo)
                 }
-                PullRequestsDetailScreen(
+                PullRequestsScreen(
                     animatedVisibilityScope = this,
                     pullRequestsId = pullRequestsId,
                     navigateBack = {

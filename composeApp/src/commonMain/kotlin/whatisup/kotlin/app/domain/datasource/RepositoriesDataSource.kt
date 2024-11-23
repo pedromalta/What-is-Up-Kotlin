@@ -2,6 +2,8 @@ package whatisup.kotlin.app.domain.datasource
 
 import com.badoo.reaktive.coroutinesinterop.singleFromCoroutine
 import com.badoo.reaktive.disposable.scope.DisposableScope
+import com.badoo.reaktive.observable.doOnAfterFinally
+import com.badoo.reaktive.observable.doOnBeforeSubscribe
 import com.badoo.reaktive.observable.observeOn
 import com.badoo.reaktive.observable.subscribe
 import com.badoo.reaktive.observable.subscribeOn
@@ -10,6 +12,7 @@ import com.badoo.reaktive.single.merge
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import io.github.aakira.napier.Napier
+import kotlinx.atomicfu.AtomicBoolean
 import whatisup.kotlin.app.data.api.services.GithubApi
 import whatisup.kotlin.app.data.persistence.LocalDB
 import whatisup.kotlin.app.domain.models.RepositoryModel
@@ -52,11 +55,6 @@ class RepositoriesDataSourceImpl(
 
     override fun fetchRepositories(page: Int) {
         Napier.d(message = "fetchRepositories(page: $page)", tag = TAG)
-        if (loadingState.value) {
-            Napier.w(message = "Busy!!", tag = TAG)
-            return
-        }
-        startLoading()
 
         merge(
             // Get local data
@@ -74,6 +72,12 @@ class RepositoriesDataSourceImpl(
         )
             .subscribeOn(scheduler)
             .observeOn(scheduler)
+            .doOnBeforeSubscribe {
+                startLoading()
+            }
+            .doOnAfterFinally {
+                stopLoading()
+            }
             .subscribe(
                 onNext = { repositories ->
                     // We add the updated list to the current set so we don't mess with the old positions, the set nature
@@ -86,10 +90,7 @@ class RepositoriesDataSourceImpl(
                         tag = TAG,
                         message = "Error on fetchRepositories"
                     )
-                },
-                onComplete = {
-                    stopLoading()
-                },
+                }
             )
     }
 

@@ -2,6 +2,8 @@ package whatisup.kotlin.app.domain.datasource
 
 import com.badoo.reaktive.coroutinesinterop.singleFromCoroutine
 import com.badoo.reaktive.disposable.scope.DisposableScope
+import com.badoo.reaktive.observable.doOnAfterFinally
+import com.badoo.reaktive.observable.doOnBeforeSubscribe
 import com.badoo.reaktive.observable.observeOn
 import com.badoo.reaktive.observable.subscribe
 import com.badoo.reaktive.observable.subscribeOn
@@ -41,12 +43,10 @@ class PullRequestsDataSourceImpl(
     override val pullRequestsSubject: BehaviorObservable<PullRequestsModel> = _pullRequestSubject
 
     override fun fetchPullRequests(repoId: Long, owner: String, repo: String) {
-        Napier.d(message = "fetchPullRequests(repoId: $repoId, owner: $owner, repo: $repo)", tag = TAG)
-        if (loadingState.value) {
-            Napier.w(message = "Busy!!", tag = TAG)
-            return
-        }
-        startLoading()
+        Napier.d(
+            message = "fetchPullRequests(repoId: $repoId, owner: $owner, repo: $repo)",
+            tag = TAG
+        )
 
         merge(
             // Get local data
@@ -63,6 +63,12 @@ class PullRequestsDataSourceImpl(
         )
             .subscribeOn(scheduler)
             .observeOn(scheduler)
+            .doOnBeforeSubscribe {
+                startLoading()
+            }
+            .doOnAfterFinally {
+                stopLoading()
+            }
             .subscribe(
                 onNext = { pullRequests ->
                     _pullRequestSubject.onNext(
