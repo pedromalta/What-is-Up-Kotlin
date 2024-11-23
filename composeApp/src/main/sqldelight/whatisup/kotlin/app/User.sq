@@ -1,0 +1,21 @@
+CREATE TABLE userEntity (
+    id INTEGER PRIMARY KEY NOT NULL,
+    login TEXT NOT NULL,
+    url TEXT NOT NULL,
+    node_id TEXT NOT NULL,
+    avatar_url TEXT NOT NULL,
+    gravatar_id TEXT,
+    html_url TEXT NOT NULL,
+    followers_url TEXT NOT NULL,
+    following_url TEXT NOT NULL,
+    gists_url TEXT NOT NULL,
+    starred_url TEXT NOT NULL,
+    subscriptions_url TEXT NOT NULL,
+    organizations_url TEXT NOT NULL,
+    repos_url TEXT NOT NULL,
+    events_url TEXT NOT NULL,
+    received_events_url TEXT NOT NULL,
+    type TEXT NOT NULL,
+    user_view_type TEXT NOT NULL,
+    site_admin INTEGER NOT NULL
+);
