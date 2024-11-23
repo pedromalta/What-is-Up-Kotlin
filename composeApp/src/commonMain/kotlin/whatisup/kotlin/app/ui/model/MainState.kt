@@ -7,6 +7,6 @@ data class MainState(
     val loadingPullRequests: Boolean = false,
     val totalCount: Int = RepositoriesDataSource.UNKNOWN_TOTAL_ITEM_COUNT,
     val currentPage: Int = 0,
-    val repos: List<Repository> = emptyList(),
+    val repos: Set<Repository> = setOf(),
     val pullRequests: PullRequests? = null,
 )

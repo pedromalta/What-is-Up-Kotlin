@@ -50,7 +50,7 @@ fun SharedTransitionScope.RepositoriesScreen(
             PagedLazyColumn(
                 modifier = modifier,
                 lazyListState = lazyListState,
-                items = state.repos,
+                items = state.repos.toList(),
                 perPage = RepositoriesDataSource.PER_PAGE,
                 isLoading = state.loadingRepoList,
                 onLoadMoreItems = {

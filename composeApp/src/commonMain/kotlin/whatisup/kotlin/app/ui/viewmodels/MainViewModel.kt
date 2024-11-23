@@ -44,7 +44,7 @@ class MainViewModel(
         .observeOn(mainScheduler)
         .subscribe { repositoriesUi ->
             _state.value = _state.value.copy(
-                repos = repositoriesUi,
+                repos = _state.value.repos + repositoriesUi,
                 currentPage = (repositoriesUi.size / RepositoriesDataSource.PER_PAGE).coerceAtLeast(1),
             )
         }.scope()
