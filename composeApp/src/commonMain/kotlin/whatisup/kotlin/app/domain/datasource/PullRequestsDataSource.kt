@@ -11,78 +11,78 @@ import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import io.github.aakira.napier.Napier
 import whatisup.kotlin.app.data.api.services.GithubApi
-import whatisup.kotlin.app.data.mappers.RepoPullRequestApiPersistenceMapper
-import whatisup.kotlin.app.data.mappers.RepoPullRequestPersistenceModelMapper
+import whatisup.kotlin.app.data.mappers.api_to_persistence_model.PullRequestMapper as ApiToPersistenceMapper
+import whatisup.kotlin.app.data.mappers.persistence_to_domain_model.PullRequestMapper as PersistenceToDomainMapper
 import whatisup.kotlin.app.data.persistence.LocalDB
-import whatisup.kotlin.app.domain.models.RepoPullRequests
+import whatisup.kotlin.app.domain.models.PullRequestsModel
 
-interface RepoPullRequestsDataSource {
+interface PullRequestsDataSource {
 
     //Use set to avoid duplicates
-    val repoPullRequestSubject: BehaviorObservable<RepoPullRequests>
+    val pullRequestsSubject: BehaviorObservable<PullRequestsModel>
     val loadingState: BehaviorObservable<Boolean>
 
-    fun fetchRepoPullRequest(repoId: Long, owner: String, repo: String)
+    fun fetchPullRequests(repoId: Long, owner: String, repo: String)
 }
 
-class RepoPullRequestsDataSourceImpl(
+class PullRequestsDataSourceImpl(
     private val db: LocalDB,
     private val api: GithubApi,
     private val scheduler: Scheduler,
-) : RepoPullRequestsDataSource, DisposableScope by DisposableScope() {
+) : PullRequestsDataSource, DisposableScope by DisposableScope() {
 
     companion object {
-        private const val TAG = "RepoPullRequestsDataSource"
+        private const val TAG = "PullRequestsDataSource"
     }
 
-    private val repoPullRequestPersistenceModelMapper = RepoPullRequestPersistenceModelMapper()
+    private val persistenceToDomainMapper = PersistenceToDomainMapper()
 
     private val _loadingState = BehaviorSubject(false).scope { it.onComplete() }
     override val loadingState: BehaviorObservable<Boolean> = _loadingState
 
-    private val _repoPullRequestSubject = BehaviorSubject(RepoPullRequests.EMPTY)
+    private val _pullRequestSubject = BehaviorSubject(PullRequestsModel.EMPTY)
         .scope { it.onComplete() }
-    override val repoPullRequestSubject: BehaviorObservable<RepoPullRequests> = _repoPullRequestSubject
+    override val pullRequestsSubject: BehaviorObservable<PullRequestsModel> = _pullRequestSubject
 
-    override fun fetchRepoPullRequest(repoId: Long, owner: String, repo: String) {
-        Napier.d(message = "fetchRepoPullRequest(owner: $owner, repo: $repo)", tag = TAG)
+    override fun fetchPullRequests(repoId: Long, owner: String, repo: String) {
+        Napier.d(message = "fetchPullRequests(owner: $owner, repo: $repo)", tag = TAG)
         if (loadingState.value) {
             Napier.w(message = "Busy!!", tag = TAG)
             return
         }
         startLoading()
 
-        val repoApiPersistenceMapper = RepoPullRequestApiPersistenceMapper()
+        val apiToPersistenceMapper = ApiToPersistenceMapper()
 
         merge(
             // Get local data
             singleFromCoroutine {
-                db.getRepoPullRequests(repoId)
+                db.getPullRequests(repoId)
             },
             // Get api data
             singleFromCoroutine {
-                val repoPullRequests = api.getRepoPullRequests(owner, repo)
-                val persistenceRepoPullRequests = repoPullRequests.map { origin ->
-                    repoApiPersistenceMapper.transform(origin)
+                val pullRequests = api.getRepoPullRequests(owner, repo)
+                val persistencePullRequests = pullRequests.map { origin ->
+                    apiToPersistenceMapper.to(origin)
                 }
                 //Add to local DB
-                db.addOrUpdateRepoPullRequests(repoId, persistenceRepoPullRequests)
-                persistenceRepoPullRequests
+                db.addOrUpdatePullRequests(repoId, persistencePullRequests)
+                persistencePullRequests
             },
         )
             .subscribeOn(scheduler)
             .observeOn(scheduler)
             .subscribe(
-                onNext = { persistenceRepoPullRequests ->
-                    val repoPullRequests = persistenceRepoPullRequests?.map {
-                        origin -> repoPullRequestPersistenceModelMapper.transform(origin)
+                onNext = { persistencePullRequests ->
+                    val pullRequests = persistencePullRequests?.map {
+                        origin -> persistenceToDomainMapper.to(origin)
                     } ?: emptyList()
-                    _repoPullRequestSubject.onNext(
-                        RepoPullRequests(
+                    _pullRequestSubject.onNext(
+                        PullRequestsModel(
                         repoId = repoId,
                         userName = owner,
                         repoName = repo,
-                        pullRequests = repoPullRequests,
+                        pullRequests = pullRequests,
                     )
                     )
                 },

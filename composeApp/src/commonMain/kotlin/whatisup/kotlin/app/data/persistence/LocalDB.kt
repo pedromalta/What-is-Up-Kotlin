@@ -1,29 +1,29 @@
 package whatisup.kotlin.app.data.persistence
 
-import whatisup.kotlin.app.data.persistence.models.Repo
-import whatisup.kotlin.app.data.persistence.models.RepoPullRequest
+import whatisup.kotlin.app.data.persistence.models.RepositoryPersistenceModel
+import whatisup.kotlin.app.data.persistence.models.PullRequestPersistenceModel
 
 interface LocalDB {
-    fun getRepos(page: Int): List<Repo>
-    fun getRepoPullRequests(repoId: Long): List<RepoPullRequest>?
-    fun addOrUpdateRepos(repos: List<Repo>)
-    fun addOrUpdateRepoPullRequests(repoId: Long, pullRequests: List<RepoPullRequest>)
+    fun getRepositories(page: Int): List<RepositoryPersistenceModel>
+    fun getPullRequests(repoId: Long): List<PullRequestPersistenceModel>?
+    fun addOrUpdateRepositories(repos: List<RepositoryPersistenceModel>)
+    fun addOrUpdatePullRequests(repoId: Long, pullRequests: List<PullRequestPersistenceModel>)
 }
 
 class RoomDB : LocalDB {
-    override fun getRepos(page: Int): List<Repo> {
+    override fun getRepositories(page: Int): List<RepositoryPersistenceModel> {
         return emptyList()
     }
 
-    override fun getRepoPullRequests(repoId: Long): List<RepoPullRequest>? {
+    override fun getPullRequests(repoId: Long): List<PullRequestPersistenceModel>? {
         return null
     }
 
-    override fun addOrUpdateRepos(repos: List<Repo>) {
+    override fun addOrUpdateRepositories(repos: List<RepositoryPersistenceModel>) {
 
     }
 
-    override fun addOrUpdateRepoPullRequests(repoId: Long, pullRequests: List<RepoPullRequest>) {
+    override fun addOrUpdatePullRequests(repoId: Long, pullRequests: List<PullRequestPersistenceModel>) {
 
     }
 

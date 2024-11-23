@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RepoUser(
+data class UserApiModel(
     val id: Long,
     val login: String,
     val url: String,

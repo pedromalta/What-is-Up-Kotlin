@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
-import whatisup.kotlin.app.domain.datasource.RepoListDataSource
+import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
 import whatisup.kotlin.app.ui.components.PagedLazyColumn
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.viewmodels.MainViewModel
@@ -50,7 +50,7 @@ fun SharedTransitionScope.RepoListScreen(
                 modifier = modifier,
                 lazyListState = lazyListState,
                 items = state.repos,
-                perPage = RepoListDataSource.PER_PAGE,
+                perPage = RepositoriesDataSource.PER_PAGE,
                 isLoading = state.loadingRepoList,
                 onLoadMoreItems = {
                     viewModel.fetchRepos(state.currentPage + 1)

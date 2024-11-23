@@ -5,7 +5,7 @@ import dev.mokkery.everySuspend
 import dev.mokkery.mock
 import kotlinx.serialization.json.Json
 import whatisup.kotlin.app.data.api.models.RepoList
-import whatisup.kotlin.app.data.api.models.RepoPullRequest
+import whatisup.kotlin.app.data.api.models.PullRequestApiModel
 import whatisup.kotlin.app.data.api.services.GithubApi
 
 
@@ -16,7 +16,7 @@ private val json = Json {
 
 private val mockApiResultPage1 = json.decodeFromString<RepoList>(kotlinReposPage1)
 private val mockApiResultPage2 = json.decodeFromString<RepoList>(kotlinReposPage2)
-private val mockApiResultPullRequests1 = json.decodeFromString<List<RepoPullRequest>>(kotlinReposPullRequests1)
+private val mockApiResultPullRequests1 = json.decodeFromString<List<PullRequestApiModel>>(kotlinReposPullRequests1)
 
 
 val githubApiMock = mock<GithubApi> {

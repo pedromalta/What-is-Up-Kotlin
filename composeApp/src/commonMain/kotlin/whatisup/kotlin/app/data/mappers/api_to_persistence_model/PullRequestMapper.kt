@@ -1,10 +1,11 @@
-package whatisup.kotlin.app.data.mappers
+package whatisup.kotlin.app.data.mappers.api_to_persistence_model
 
-import whatisup.kotlin.app.data.persistence.models.RepoPullRequest as PersistencePullRequest
-import whatisup.kotlin.app.data.api.models.RepoPullRequest as ApiPullRequest
+import whatisup.kotlin.app.data.mappers.Mapper
+import whatisup.kotlin.app.data.persistence.models.PullRequestPersistenceModel as PersistencePullRequest
+import whatisup.kotlin.app.data.api.models.PullRequestApiModel as ApiPullRequest
 
-class RepoPullRequestApiPersistenceMapper: Mapper<ApiPullRequest, PersistencePullRequest> {
-    override fun transform(origin: ApiPullRequest): PersistencePullRequest {
+class PullRequestMapper: Mapper<ApiPullRequest, PersistencePullRequest> {
+    override fun to(origin: ApiPullRequest): PersistencePullRequest {
         origin.apply {
             return PersistencePullRequest(
                 id = id,

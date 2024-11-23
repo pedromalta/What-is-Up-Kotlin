@@ -10,21 +10,21 @@ import com.badoo.reaktive.scheduler.computationScheduler
 import com.badoo.reaktive.scheduler.mainScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import whatisup.kotlin.app.domain.datasource.RepoListDataSource
-import whatisup.kotlin.app.domain.datasource.RepoPullRequestsDataSource
-import whatisup.kotlin.app.ui.mappers.RepoListMapper
-import whatisup.kotlin.app.ui.mappers.RepoPullRequestMapper
+import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
+import whatisup.kotlin.app.domain.datasource.PullRequestsDataSource
+import whatisup.kotlin.app.ui.mappers.RepositoryMapper
+import whatisup.kotlin.app.ui.mappers.PullRequestMapper
 import whatisup.kotlin.app.ui.model.MainState
 import whatisup.kotlin.app.ui.model.PullRequests
 import whatisup.kotlin.app.ui.model.PullRequestsId
 
 class MainViewModel(
-    private val repoListDataSource: RepoListDataSource,
-    private val repoPullRequestsDataSource: RepoPullRequestsDataSource,
+    private val repoListDataSource: RepositoriesDataSource,
+    private val repoPullRequestsDataSource: PullRequestsDataSource,
 ): ViewModel(), DisposableScope by DisposableScope() {
 
-    private val repoListMapper = RepoListMapper()
-    private val repoPullRequestsMapper = RepoPullRequestMapper()
+    private val repoListMapper = RepositoryMapper()
+    private val repoPullRequestsMapper = PullRequestMapper()
 
     private val _state = MutableStateFlow(MainState())
     val state = _state.asStateFlow()
@@ -33,19 +33,19 @@ class MainViewModel(
         fetchRepos(1)
     }
 
-    val repoListObserver = repoListDataSource.repoListSubject
+    val repoListObserver = repoListDataSource.repositoriesSubject
         .subscribeOn(computationScheduler)
         .observeOn(computationScheduler)
         .map { repoList ->
             repoList.map { repoDomain ->
-                repoListMapper.transform(repoDomain)
+                repoListMapper.to(repoDomain)
             }
         }
         .observeOn(mainScheduler)
         .subscribe { repoListUi ->
             _state.value = _state.value.copy(
                 repos = repoListUi,
-                currentPage = repoListUi.size / RepoListDataSource.PER_PAGE,
+                currentPage = repoListUi.size / RepositoriesDataSource.PER_PAGE,
             )
         }.scope()
 
@@ -59,12 +59,12 @@ class MainViewModel(
         }.scope()
 
 
-    val repoPullRequestsObserver = repoPullRequestsDataSource.repoPullRequestSubject
+    val repoPullRequestsObserver = repoPullRequestsDataSource.pullRequestsSubject
         .subscribeOn(computationScheduler)
         .observeOn(computationScheduler)
         .map { repoPullRequests ->
             val pullRequestListUi = repoPullRequests.pullRequests.map { repoDomain ->
-                repoPullRequestsMapper.transform(repoDomain)
+                repoPullRequestsMapper.to(repoDomain)
             }
             PullRequests(
                 id = repoPullRequests.repoId,
@@ -91,11 +91,11 @@ class MainViewModel(
         }.scope()
 
     fun fetchRepos(page: Int) {
-        repoListDataSource.fetchRepoList(page)
+        repoListDataSource.fetchRepositories(page)
     }
 
     fun fetchRepoPullRequests(pullRequestsId: PullRequestsId) {
-        repoPullRequestsDataSource.fetchRepoPullRequest(
+        repoPullRequestsDataSource.fetchPullRequests(
             repoId = pullRequestsId.repoId,
             owner = pullRequestsId.owner,
             repo = pullRequestsId.repo,

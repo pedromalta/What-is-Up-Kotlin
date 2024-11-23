@@ -1,12 +1,13 @@
-package whatisup.kotlin.app.data.mappers
+package whatisup.kotlin.app.data.mappers.persistence_to_domain_model
 
-import whatisup.kotlin.app.domain.models.RepoPullRequest as ModelPullRequest
-import whatisup.kotlin.app.data.persistence.models.RepoPullRequest as PersistencePullRequest
+import whatisup.kotlin.app.data.mappers.Mapper
+import whatisup.kotlin.app.domain.models.PullRequestModel as DomainPullRequest
+import whatisup.kotlin.app.data.persistence.models.PullRequestPersistenceModel as PersistencePullRequest
 
-class RepoPullRequestPersistenceModelMapper: Mapper<PersistencePullRequest, ModelPullRequest> {
-    override fun transform(origin: PersistencePullRequest): ModelPullRequest {
+class PullRequestMapper: Mapper<PersistencePullRequest, DomainPullRequest> {
+    override fun to(origin: PersistencePullRequest): DomainPullRequest {
         origin.apply {
-            return ModelPullRequest(
+            return DomainPullRequest(
                 id = id,
                 title = title,
                 body = body,

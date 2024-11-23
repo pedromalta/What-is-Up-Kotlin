@@ -64,7 +64,7 @@ fun SharedTransitionScope.RepoPullRequestsDetailScreen(
                                 text = pullRequest.title,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                maxLines = 1,
+                                maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
                                 color = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.padding(

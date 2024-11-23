@@ -1,13 +1,14 @@
-package whatisup.kotlin.app.data.mappers
+package whatisup.kotlin.app.data.mappers.persistence_to_domain_model
 
-import whatisup.kotlin.app.data.persistence.models.Repo as PersistenceRepo
-import whatisup.kotlin.app.domain.models.Repo as ModelRepo
+import whatisup.kotlin.app.data.mappers.Mapper
+import whatisup.kotlin.app.domain.models.RepositoryModel as DomainRepository
+import whatisup.kotlin.app.data.persistence.models.RepositoryPersistenceModel as PersistenceRepository
 
-class RepoPersistenceModelMapper: Mapper<PersistenceRepo, ModelRepo> {
+class RepositoryMapper: Mapper<PersistenceRepository, DomainRepository> {
 
-    override fun transform(origin: PersistenceRepo): ModelRepo {
+    override fun to(origin: PersistenceRepository): DomainRepository {
         origin.apply {
-            return ModelRepo(
+            return DomainRepository(
                 id = id,
                 name = name,
                 fullName = fullName,

@@ -1,7 +1,12 @@
-package whatisup.kotlin.app.domain.models
+package whatisup.kotlin.app.data.persistence.models
 
-data class Repo(
-    val id: Long,
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity
+data class RepositoryPersistenceModel(
+    @PrimaryKey val id: Long,
+    val page: Int,
     val name: String,
     val fullName: String,
     val isPrivate: Boolean,

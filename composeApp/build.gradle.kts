@@ -85,6 +85,7 @@ kotlin {
             implementation(libs.bundles.room.common)
 
             implementation(libs.napier)
+            implementation(libs.store)
 
         }
 

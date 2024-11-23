@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class RepoUser(
+data class UserPersistenceModel(
     @PrimaryKey val id: Long,
     val login: String,
     val url: String,

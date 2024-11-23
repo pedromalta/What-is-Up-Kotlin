@@ -1,12 +1,12 @@
 package whatisup.kotlin.app.domain.models
 
-data class RepoPullRequests(
+data class PullRequestsModel(
     val repoId: Long,
     val userName: String,
     val repoName: String,
-    val pullRequests: List<RepoPullRequest>,
+    val pullRequests: List<PullRequestModel>,
 ) {
     companion object {
-        val EMPTY = RepoPullRequests(0, "", "", emptyList())
+        val EMPTY = PullRequestsModel(0, "", "", emptyList())
     }
 }

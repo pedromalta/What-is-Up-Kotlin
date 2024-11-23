@@ -1,11 +1,7 @@
-package whatisup.kotlin.app.data.persistence.models
+package whatisup.kotlin.app.domain.models
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity
-data class RepoPullRequest(
-    @PrimaryKey val id: Long,
+data class PullRequestModel(
+    val id: Long,
     val url: String,
     val nodeId: String,
     val htmlUrl: String,

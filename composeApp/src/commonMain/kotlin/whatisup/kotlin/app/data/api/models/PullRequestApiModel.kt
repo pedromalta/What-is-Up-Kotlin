@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RepoPullRequest(
+data class PullRequestApiModel(
     val id: Long,
     val url: String,
     @SerialName("node_id") val nodeId: String,
@@ -16,7 +16,7 @@ data class RepoPullRequest(
     val state: String,
     @SerialName("locked") val isLocked: Boolean,
     val title: String,
-    val user: RepoUser,
+    val user: UserApiModel,
     val body: String?,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String,

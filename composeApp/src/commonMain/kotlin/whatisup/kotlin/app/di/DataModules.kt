@@ -11,10 +11,10 @@ import whatisup.kotlin.app.data.api.services.GithubApi
 import whatisup.kotlin.app.data.api.services.GithubApiImpl
 import whatisup.kotlin.app.data.mocks.MockDB
 import whatisup.kotlin.app.data.persistence.LocalDB
-import whatisup.kotlin.app.domain.datasource.RepoListDataSource
-import whatisup.kotlin.app.domain.datasource.RepoListDataSourceImpl
-import whatisup.kotlin.app.domain.datasource.RepoPullRequestsDataSource
-import whatisup.kotlin.app.domain.datasource.RepoPullRequestsDataSourceImpl
+import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
+import whatisup.kotlin.app.domain.datasource.RepositoriesDataSourceDataSourceImpl
+import whatisup.kotlin.app.domain.datasource.PullRequestsDataSource
+import whatisup.kotlin.app.domain.datasource.PullRequestsDataSourceImpl
 
 class DataModules {
 
@@ -28,11 +28,11 @@ class DataModules {
     }
 
     private val repoListDataSource = module {
-        factory<RepoListDataSource> { RepoListDataSourceImpl(get(), get(), computationScheduler) }
+        factory<RepositoriesDataSource> { RepositoriesDataSourceDataSourceImpl(get(), get(), computationScheduler) }
     }
 
     private val repoPullRequestsDataSource = module {
-        factory<RepoPullRequestsDataSource> { RepoPullRequestsDataSourceImpl(get(), get(), computationScheduler) }
+        factory<PullRequestsDataSource> { PullRequestsDataSourceImpl(get(), get(), computationScheduler) }
     }
 
     val dataSource = remoteDatasource + localDatasource + repoListDataSource + repoPullRequestsDataSource

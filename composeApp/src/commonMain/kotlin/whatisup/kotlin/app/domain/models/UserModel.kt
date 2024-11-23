@@ -1,6 +1,6 @@
 package whatisup.kotlin.app.domain.models
 
-data class RepoUser(
+data class UserModel(
     val id: Long,
     val login: String,
     val url: String,

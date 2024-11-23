@@ -1,13 +1,15 @@
-package whatisup.kotlin.app.data.mappers
+package whatisup.kotlin.app.data.mappers.api_to_persistence_model
 
-import whatisup.kotlin.app.data.api.models.Repo as ApiRepo
-import whatisup.kotlin.app.data.persistence.models.Repo as PersistenceRepo
+import whatisup.kotlin.app.data.mappers.Mapper
+import whatisup.kotlin.app.data.api.models.RepositoryApiModel as ApiRepository
+import whatisup.kotlin.app.data.persistence.models.RepositoryPersistenceModel as PersistenceRepository
 
-class RepoApiPersistenceMapper(private val page: Int) : Mapper<ApiRepo, PersistenceRepo> {
+class RepositoryMapper(private val page: Int) :
+    Mapper<ApiRepository, PersistenceRepository> {
 
-    override fun transform(origin: ApiRepo): PersistenceRepo {
+    override fun to(origin: ApiRepository): PersistenceRepository {
         origin.apply {
-            return PersistenceRepo(
+            return PersistenceRepository(
                 id = id,
                 page = page,
                 name = name,

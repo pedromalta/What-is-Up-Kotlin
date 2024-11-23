@@ -4,13 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Repo(
+data class RepositoryApiModel(
     val id: Long,
     @SerialName("node_id") val nodeId: String,
     val name: String,
     @SerialName("full_name") val fullName: String,
     @SerialName("private") val isPrivate: Boolean,
-    val owner: RepoUser,
+    val owner: UserApiModel,
     @SerialName("html_url") val htmlUrl: String,
     val description: String?,
     @SerialName("fork") val isFork: Boolean,

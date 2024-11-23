@@ -6,20 +6,20 @@ import io.ktor.client.request.get
 import io.ktor.http.appendPathSegments
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import whatisup.kotlin.app.data.api.models.RepoList
-import whatisup.kotlin.app.data.api.models.RepoPullRequest
+import whatisup.kotlin.app.data.api.models.PullRequestApiModel
+import whatisup.kotlin.app.data.api.models.RepositoryListApiModel
 
 interface GithubApi {
     suspend fun searchRepositories(
         language: String = "Kotlin",
         sort: String = "stars",
         page: Int,
-    ): RepoList
+    ): RepositoryListApiModel
 
     suspend fun getRepoPullRequests(
         owner: String,
         repo: String
-    ): List<RepoPullRequest>
+    ): List<PullRequestApiModel>
 }
 
 class GithubApiImpl(
@@ -31,7 +31,7 @@ class GithubApiImpl(
         language: String,
         sort: String,
         page: Int
-    ): RepoList {
+    ): RepositoryListApiModel {
         return withContext(dispatcher) {
             // Example URL: https://api.github.com/search/repositories?q=language:Kotlin&sort=stars&page=1
 
@@ -43,11 +43,11 @@ class GithubApiImpl(
                     parameters.append("page", page.toString())
 
                 }
-            }.body<RepoList>()
+            }.body<RepositoryListApiModel>()
         }
     }
 
-    override suspend fun getRepoPullRequests(owner: String, repo: String): List<RepoPullRequest> {
+    override suspend fun getRepoPullRequests(owner: String, repo: String): List<PullRequestApiModel> {
         return withContext(dispatcher) {
             // Example URL: https://api.github.com/repos/JetBrains/kotlin/pulls
 
@@ -55,7 +55,7 @@ class GithubApiImpl(
                 url {
                     appendPathSegments("repos", owner, repo, "pulls")
                 }
-            }.body<List<RepoPullRequest>>()
+            }.body<List<PullRequestApiModel>>()
         }
     }
 
