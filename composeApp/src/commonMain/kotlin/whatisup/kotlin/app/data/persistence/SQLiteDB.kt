@@ -9,6 +9,7 @@ import whatisup.kotlin.app.data.mappers.api_to_entity_model.RepositoryMapper
 import whatisup.kotlin.app.data.mappers.api_to_entity_model.UserMapper
 import whatisup.kotlin.app.data.mappers.entity_to_domain_model.GetByRepoIdQueryRowToPullRequest
 import whatisup.kotlin.app.data.mappers.entity_to_domain_model.GetPageQueryRowToRepository
+import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
 import whatisup.kotlin.app.domain.models.PullRequestModel
 import whatisup.kotlin.app.domain.models.RepositoryModel
 
@@ -24,7 +25,9 @@ class SQLightDB(appDatabase: AppDatabase): LocalDB {
     private val userQueries = appDatabase.userQueries
 
     override fun getRepositories(page: Int): List<RepositoryModel> {
-        val query = repositoryQueries.getPage(page.toLong()).executeAsList()
+        val offset = RepositoriesDataSource.PER_PAGE * (page - 1L)
+
+        val query = repositoryQueries.getPage(offset).executeAsList()
         val mapper = GetPageQueryRowToRepository()
         return query.map { row -> mapper.transform(row) }
     }
