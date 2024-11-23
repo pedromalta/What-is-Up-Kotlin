@@ -30,7 +30,7 @@ class MainViewModel(
     val state = _state.asStateFlow()
 
     init {
-        fetchRepos(1)
+        fetchRepositories(1)
     }
 
     val repoListObserver = repoListDataSource.repositoriesSubject
@@ -38,7 +38,7 @@ class MainViewModel(
         .observeOn(computationScheduler)
         .map { repoList ->
             repoList.map { repoDomain ->
-                repoListMapper.to(repoDomain)
+                repoListMapper.transform(repoDomain)
             }
         }
         .observeOn(mainScheduler)
@@ -64,7 +64,7 @@ class MainViewModel(
         .observeOn(computationScheduler)
         .map { repoPullRequests ->
             val pullRequestListUi = repoPullRequests.pullRequests.map { repoDomain ->
-                repoPullRequestsMapper.to(repoDomain)
+                repoPullRequestsMapper.transform(repoDomain)
             }
             PullRequests(
                 id = repoPullRequests.repoId,
@@ -90,11 +90,11 @@ class MainViewModel(
             )
         }.scope()
 
-    fun fetchRepos(page: Int) {
+    fun fetchRepositories(page: Int) {
         repoListDataSource.fetchRepositories(page)
     }
 
-    fun fetchRepoPullRequests(pullRequestsId: PullRequestsId) {
+    fun fetchPullRequests(pullRequestsId: PullRequestsId) {
         repoPullRequestsDataSource.fetchPullRequests(
             repoId = pullRequestsId.repoId,
             owner = pullRequestsId.owner,

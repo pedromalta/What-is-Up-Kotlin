@@ -24,20 +24,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.viewmodels.MainViewModel
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, KoinExperimentalAPI::class)
 @Composable
-fun SharedTransitionScope.RepoPullRequestsDetailScreen(
+fun SharedTransitionScope.PullRequestsDetailScreen(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
     animatedVisibilityScope: AnimatedVisibilityScope,
     pullRequestsId: PullRequestsId,
     navigateBack: () -> Unit
 ) {
+
     val viewModel = koinViewModel<MainViewModel>()
-    viewModel.fetchRepoPullRequests(pullRequestsId)
+    viewModel.fetchPullRequests(pullRequestsId)
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 

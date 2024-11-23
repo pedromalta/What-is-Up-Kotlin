@@ -8,8 +8,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.serialization)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
     alias(libs.plugins.mokkery)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -39,10 +39,6 @@ kotlin {
         }
     }
 
-    room {
-        schemaDirectory("$projectDir/schemas")
-    }
-    
     sourceSets {
 
         dependencies {
@@ -59,9 +55,12 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             //implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.android.driver)
+            implementation(libs.koin.android)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.native.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -82,10 +81,10 @@ kotlin {
             implementation(libs.bundles.koin.common)
             implementation(libs.bundles.reaktive.common)
             implementation(libs.bundles.ktor.common)
-            implementation(libs.bundles.room.common)
 
             implementation(libs.napier)
             implementation(libs.store)
+            implementation(libs.sqlite.bundled)
 
         }
 
@@ -123,6 +122,14 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("whatisup.kotlin.app.data.db")
+        }
     }
 }
 

@@ -10,9 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import org.koin.compose.KoinApplication
-import whatisup.kotlin.app.di.DataModules
-import whatisup.kotlin.app.ui.di.UIModules
+import org.koin.compose.KoinContext
 import whatisup.kotlin.app.ui.navigation.Navigation
 import whatisup.kotlin.app.ui.theme.RepoAppTheme
 
@@ -20,14 +18,10 @@ import whatisup.kotlin.app.ui.theme.RepoAppTheme
 @Composable
 @Preview
 fun App() {
-    KoinApplication(
-        application = {
-            // Start Napier logger as soon as possible
-            Napier.base(DebugAntilog())
-            modules(DataModules().dataSource + UIModules().mainViewModel)
-        }
-    )
-    {
+    Napier.base(DebugAntilog())
+
+    KoinContext {
+
         RepoAppTheme {
 
             val navController = rememberNavController()

@@ -1,0 +1,39 @@
+CREATE TABLE pullRequestEntity (
+    id INTEGER PRIMARY KEY NOT NULL,
+    url TEXT NOT NULL,
+    nodeId TEXT NOT NULL,
+    htmlUrl TEXT NOT NULL,
+    diffUrl TEXT NOT NULL,
+    patchUrl TEXT NOT NULL,
+    issueUrl TEXT NOT NULL,
+    number INTEGER NOT NULL,
+    state TEXT NOT NULL,
+    isLocked INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    userId INTEGER NOT NULL,
+    repoId INTEGER NOT NULL,
+    body TEXT,
+    createdAt TEXT NOT NULL,
+    updatedAt TEXT NOT NULL,
+    closedAt TEXT,
+    mergedAt TEXT,
+    mergeCommitSha TEXT,
+    draft INTEGER NOT NULL,
+    commitsUrl TEXT NOT NULL,
+    reviewCommentsUrl TEXT NOT NULL,
+    reviewCommentUrl TEXT NOT NULL,
+    commentsUrl TEXT NOT NULL,
+    statusesUrl TEXT NOT NULL,
+    FOREIGN KEY (userId) REFERENCES userEntity(id)
+);
+
+getByRepoId:
+SELECT *
+FROM pullRequestEntity
+INNER JOIN userEntity ON pullRequestEntity.userId = userEntity.id
+WHERE pullRequestEntity.repoId = ?
+ORDER BY pullRequestEntity.number DESC;
+
+insertOrReplace:
+INSERT OR REPLACE INTO pullRequestEntity
+VALUES ?;

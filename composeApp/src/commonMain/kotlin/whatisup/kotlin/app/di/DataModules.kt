@@ -5,16 +5,21 @@ import com.badoo.reaktive.scheduler.computationScheduler
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
+import org.koin.core.module.Module
 import org.koin.dsl.module
 import whatisup.kotlin.app.data.api.services.DefaultHttpClient
 import whatisup.kotlin.app.data.api.services.GithubApi
 import whatisup.kotlin.app.data.api.services.GithubApiImpl
-import whatisup.kotlin.app.data.mocks.MockDB
+import whatisup.kotlin.app.data.db.AppDatabase
 import whatisup.kotlin.app.data.persistence.LocalDB
-import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
-import whatisup.kotlin.app.domain.datasource.RepositoriesDataSourceDataSourceImpl
+import whatisup.kotlin.app.data.persistence.SQLightDB
+import whatisup.kotlin.app.data.persistence.createDatabase
 import whatisup.kotlin.app.domain.datasource.PullRequestsDataSource
 import whatisup.kotlin.app.domain.datasource.PullRequestsDataSourceImpl
+import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
+import whatisup.kotlin.app.domain.datasource.RepositoriesDataSourceImpl
+
+expect val sqlDriverModule: Module
 
 class DataModules {
 
@@ -23,18 +28,19 @@ class DataModules {
         single<GithubApi> { GithubApiImpl(Dispatchers.IO, get()) }
     }
 
-    private val localDatasource = module {
-        single<LocalDB> { MockDB() }
+    private val localDatasource = sqlDriverModule + module {
+        single<AppDatabase> { createDatabase(get()) }
+        single<LocalDB> { SQLightDB(get()) }
     }
 
-    private val repoListDataSource = module {
-        factory<RepositoriesDataSource> { RepositoriesDataSourceDataSourceImpl(get(), get(), computationScheduler) }
+    private val repositoriesDataSource = module {
+        factory<RepositoriesDataSource> { RepositoriesDataSourceImpl(get(), get(), computationScheduler) }
     }
 
-    private val repoPullRequestsDataSource = module {
+    private val pullRequestsDataSource = module {
         factory<PullRequestsDataSource> { PullRequestsDataSourceImpl(get(), get(), computationScheduler) }
     }
 
-    val dataSource = remoteDatasource + localDatasource + repoListDataSource + repoPullRequestsDataSource
+    val dataSource = remoteDatasource + localDatasource + repositoriesDataSource + pullRequestsDataSource
 
 }

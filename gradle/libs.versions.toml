@@ -1,6 +1,7 @@
 [versions]
 agp = "8.7.2"
 android-compilesdk = "34"
+android-driver = "2.0.2"
 android-minsdk = "24"
 android-targetsdk = "34"
 androidx-activity-compose = "1.9.3"
@@ -22,6 +23,7 @@ koin = "4.0.0"
 ksp = "2.0.21-1.0.27"
 window-size = "0.5.0"
 napier = "2.7.1"
+sql-delight = "2.0.2"
 
 #Room and SQLite support for Kotlin Multiplatform is better supported on these alphas
 room = "2.7.0-alpha11"
@@ -74,6 +76,8 @@ androidx-room-compiler = { group = "androidx.room", name = "room-compiler", vers
 
 store = { module = "org.mobilenativefoundation.store:store5", version.ref = "store" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+native-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sql-delight" }
+android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sql-delight" }
 
 reaktive = { module = "com.badoo.reaktive:reaktive", version.ref = "reaktive" }
 reaktive-annotations = { module = "com.badoo.reaktive:reaktive-annotations", version.ref = "reaktive" }
@@ -99,3 +103,4 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 mokkery = { id = "dev.mokkery",  version.ref = "mokkery" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sql-delight" }

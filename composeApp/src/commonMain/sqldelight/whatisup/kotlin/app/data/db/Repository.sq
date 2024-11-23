@@ -1,0 +1,47 @@
+CREATE TABLE repositoryEntity (
+    id INTEGER PRIMARY KEY NOT NULL,
+    nodeId TEXT NOT NULL,
+    name TEXT NOT NULL,
+    fullName TEXT NOT NULL,
+    isPrivate INTEGER NOT NULL,
+    ownerId INTEGER NOT NULL,
+    htmlUrl TEXT NOT NULL,
+    description TEXT,
+    isFork INTEGER NOT NULL,
+    url TEXT NOT NULL,
+    homepage TEXT,
+    size INTEGER NOT NULL,
+    stargazersCount INTEGER NOT NULL,
+    watchersCount INTEGER NOT NULL,
+    language TEXT,
+    hasIssues INTEGER NOT NULL,
+    hasProjects INTEGER NOT NULL,
+    hasDownloads INTEGER NOT NULL,
+    hasWiki INTEGER NOT NULL,
+    hasPages INTEGER NOT NULL,
+    hasDiscussions INTEGER NOT NULL,
+    forksCount INTEGER NOT NULL,
+    mirrorUrl TEXT,
+    isArchived INTEGER NOT NULL,
+    isDisabled INTEGER NOT NULL,
+    openIssuesCount INTEGER NOT NULL,
+    topics TEXT,
+    visibility TEXT NOT NULL,
+    forks INTEGER NOT NULL,
+    openIssues INTEGER NOT NULL,
+    watchers INTEGER NOT NULL,
+    defaultBranch TEXT NOT NULL,
+    score REAL NOT NULL,
+    FOREIGN KEY (ownerId) REFERENCES userEntity(id)
+);
+
+getPage:
+SELECT *
+FROM repositoryEntity
+INNER JOIN userEntity ON repositoryEntity.ownerId = userEntity.id
+ORDER BY repositoryEntity.stargazersCount DESC
+LIMIT 30 OFFSET ?;
+
+insertOrReplace:
+INSERT OR REPLACE INTO repositoryEntity
+VALUES ?;

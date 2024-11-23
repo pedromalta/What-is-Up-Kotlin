@@ -11,7 +11,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import whatisup.kotlin.app.data.api.githubApiMock
-import whatisup.kotlin.app.data.db.localDBMock
+import whatisup.kotlin.app.data.mocks.MockDB
 import whatisup.kotlin.app.domain.datasource.PullRequestsDataSourceImpl
 import whatisup.kotlin.app.domain.models.PullRequestsModel
 import kotlin.test.AfterTest
@@ -20,12 +20,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
-class RepositoryModelPersistenceModelPullRequestsDataSourceImplTestApiModelPersistenceModelModel {
+class PullRequestsDataSourceImplTest {
 
     private val testingScheduler = TestScheduler(isManualProcessing = true)
 
     //TODO use Koin test to inject and control these dependencies
-    private val dataSource = PullRequestsDataSourceImpl(localDBMock, githubApiMock, testingScheduler)
+    private val dataSource = PullRequestsDataSourceImpl(MockDB(), githubApiMock, testingScheduler)
 
     @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
     @BeforeTest
@@ -41,7 +41,7 @@ class RepositoryModelPersistenceModelPullRequestsDataSourceImplTestApiModelPersi
 
 
     @Test
-    fun `fetchRepoList emits repo data and updates repoListSubject`() = runTest {
+    fun `fetchRepoList emits repo data and updates pullRequestsSubject`() = runTest {
         launch(Dispatchers.Main) {
 
             val repoPullRequestsSubject = dataSource.pullRequestsSubject.test()

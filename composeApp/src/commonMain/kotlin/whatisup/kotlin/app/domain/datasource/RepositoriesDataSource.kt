@@ -11,8 +11,6 @@ import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import io.github.aakira.napier.Napier
 import whatisup.kotlin.app.data.api.services.GithubApi
-import whatisup.kotlin.app.data.mappers.api_to_persistence_model.RepositoryMapper as ApiToPersistenceMapper
-import whatisup.kotlin.app.data.mappers.persistence_to_domain_model.RepositoryMapper as PersistenceToDomainMapper
 import whatisup.kotlin.app.data.persistence.LocalDB
 import whatisup.kotlin.app.domain.models.RepositoryModel
 
@@ -32,7 +30,7 @@ interface RepositoriesDataSource {
     fun fetchRepositories(page: Int)
 }
 
-class RepositoriesDataSourceDataSourceImpl(
+class RepositoriesDataSourceImpl(
     private val db: LocalDB,
     private val api: GithubApi,
     private val scheduler: Scheduler,
@@ -41,8 +39,6 @@ class RepositoriesDataSourceDataSourceImpl(
     companion object {
         private const val TAG = "RepositoriesDataSource"
     }
-
-    private val persistenceToDomainMapper = PersistenceToDomainMapper()
 
     private val _loadingState = BehaviorSubject(false).scope { it.onComplete() }
     override val loadingState: BehaviorObservable<Boolean> = _loadingState
@@ -62,8 +58,6 @@ class RepositoriesDataSourceDataSourceImpl(
         }
         startLoading()
 
-        val apiToPersistenceMapper = ApiToPersistenceMapper(page)
-
         merge(
             // Get local data
             singleFromCoroutine {
@@ -71,29 +65,27 @@ class RepositoriesDataSourceDataSourceImpl(
             },
             // Get api data
             singleFromCoroutine {
-                val repoList = api.searchRepositories(page = page)
-                _repositoriesTotalCount.onNext(repoList.totalCount)
-                var persistenceRepositories = repoList.items.map { origin ->
-                    apiToPersistenceMapper.to(origin)
-                }
+                val apiRepositories = api.searchRepositories(page = page)
+                _repositoriesTotalCount.onNext(apiRepositories.totalCount)
                 //Add to local DB
-                db.addOrUpdateRepositories(persistenceRepositories)
-                persistenceRepositories = db.getRepositories(page)
-                persistenceRepositories
+                db.addOrUpdateRepositories(apiRepositories.items)
+                db.getRepositories(page)
             },
         )
             .subscribeOn(scheduler)
             .observeOn(scheduler)
             .subscribe(
-                onNext = { persistenceRepositories ->
-                    val repositories =
-                        persistenceRepositories.map { origin -> persistenceToDomainMapper.to(origin) }
+                onNext = { repositories ->
                     // We add the updated list to the current set so we don't mess with the old positions, the set nature
                     // of the data structure will keep the positions and prevent duplicates
                     _repositoriesSubject.onNext(repositoriesSubject.value + repositories)
                 },
-                onError = {
-
+                onError = { error ->
+                    Napier.e(
+                        throwable = error,
+                        tag = TAG,
+                        message = "Error on fetchRepositories"
+                    )
                 },
                 onComplete = {
                     stopLoading()

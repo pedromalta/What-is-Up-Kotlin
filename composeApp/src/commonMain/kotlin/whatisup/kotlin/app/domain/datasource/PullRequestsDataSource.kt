@@ -11,8 +11,6 @@ import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import io.github.aakira.napier.Napier
 import whatisup.kotlin.app.data.api.services.GithubApi
-import whatisup.kotlin.app.data.mappers.api_to_persistence_model.PullRequestMapper as ApiToPersistenceMapper
-import whatisup.kotlin.app.data.mappers.persistence_to_domain_model.PullRequestMapper as PersistenceToDomainMapper
 import whatisup.kotlin.app.data.persistence.LocalDB
 import whatisup.kotlin.app.domain.models.PullRequestsModel
 
@@ -35,8 +33,6 @@ class PullRequestsDataSourceImpl(
         private const val TAG = "PullRequestsDataSource"
     }
 
-    private val persistenceToDomainMapper = PersistenceToDomainMapper()
-
     private val _loadingState = BehaviorSubject(false).scope { it.onComplete() }
     override val loadingState: BehaviorObservable<Boolean> = _loadingState
 
@@ -45,14 +41,12 @@ class PullRequestsDataSourceImpl(
     override val pullRequestsSubject: BehaviorObservable<PullRequestsModel> = _pullRequestSubject
 
     override fun fetchPullRequests(repoId: Long, owner: String, repo: String) {
-        Napier.d(message = "fetchPullRequests(owner: $owner, repo: $repo)", tag = TAG)
+        Napier.d(message = "fetchPullRequests(repoId: $repoId, owner: $owner, repo: $repo)", tag = TAG)
         if (loadingState.value) {
             Napier.w(message = "Busy!!", tag = TAG)
             return
         }
         startLoading()
-
-        val apiToPersistenceMapper = ApiToPersistenceMapper()
 
         merge(
             // Get local data
@@ -61,40 +55,37 @@ class PullRequestsDataSourceImpl(
             },
             // Get api data
             singleFromCoroutine {
-                val pullRequests = api.getRepoPullRequests(owner, repo)
-                val persistencePullRequests = pullRequests.map { origin ->
-                    apiToPersistenceMapper.to(origin)
-                }
+                val apiPullRequests = api.getRepoPullRequests(repoId, owner, repo)
                 //Add to local DB
-                db.addOrUpdatePullRequests(repoId, persistencePullRequests)
-                persistencePullRequests
+                db.addOrUpdatePullRequests(apiPullRequests)
+                db.getPullRequests(repoId)
             },
         )
             .subscribeOn(scheduler)
             .observeOn(scheduler)
             .subscribe(
-                onNext = { persistencePullRequests ->
-                    val pullRequests = persistencePullRequests?.map {
-                        origin -> persistenceToDomainMapper.to(origin)
-                    } ?: emptyList()
+                onNext = { pullRequests ->
                     _pullRequestSubject.onNext(
                         PullRequestsModel(
-                        repoId = repoId,
-                        userName = owner,
-                        repoName = repo,
-                        pullRequests = pullRequests,
-                    )
+                            repoId = repoId,
+                            userName = owner,
+                            repoName = repo,
+                            pullRequests = pullRequests,
+                        )
                     )
                 },
-                onError = {
-
+                onError = { error ->
+                    Napier.e(
+                        throwable = error,
+                        tag = TAG,
+                        message = "Error on fetchPullRequests"
+                    )
                 },
                 onComplete = {
                     stopLoading()
                 },
             )
     }
-
 
 
     private fun startLoading() {

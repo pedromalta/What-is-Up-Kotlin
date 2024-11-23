@@ -9,13 +9,13 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import whatisup.kotlin.app.ui.RepoListScreen
-import whatisup.kotlin.app.ui.RepoPullRequestsDetailScreen
+import whatisup.kotlin.app.ui.RepositoriesScreen
+import whatisup.kotlin.app.ui.PullRequestsDetailScreen
 import whatisup.kotlin.app.ui.model.PullRequestsId
 
 enum class NavigationScreens(val route: String) {
     HomeScreen("home_screen"),
-    RepoDetailScreen("repo_detail_screen")
+    RepoDetailScreen("detail_screen")
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -28,11 +28,11 @@ fun Navigation(
             navController = navController as NavHostController,
             startDestination = NavigationScreens.HomeScreen.route
         ) {
-            // RepoListScreen
+            // RepositoriesScreen
             composable(
                 route = NavigationScreens.HomeScreen.route
             ) {
-                RepoListScreen(
+                RepositoriesScreen(
                     animatedVisibilityScope = this,
                     navigateToPullRequestsDetailScreen = { pullRequestsId ->
                         navController.navigate(getDetailScreenRoute(pullRequestsId))
@@ -40,7 +40,7 @@ fun Navigation(
                 )
             }
 
-            // RepoPullRequestsDetailScreen
+            // PullRequestsDetailScreen
             composable(
                 route = "${NavigationScreens.RepoDetailScreen.route}/{repoId}/{owner}/{repo}",
                 arguments = listOf(
@@ -54,10 +54,10 @@ fun Navigation(
                     val repoId = args.getLong("repoId")
                     val owner = args.getString("owner")
                     val repo = args.getString("repo")
-                    if (owner == null || repo == null) return@composable
+                    if (owner == null || repo == null || repoId == 0L) return@composable
                     PullRequestsId(repoId, owner, repo)
                 }
-                RepoPullRequestsDetailScreen(
+                PullRequestsDetailScreen(
                     animatedVisibilityScope = this,
                     pullRequestsId = pullRequestsId,
                     navigateBack = {

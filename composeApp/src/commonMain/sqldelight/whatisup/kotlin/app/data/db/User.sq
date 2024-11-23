@@ -1,0 +1,25 @@
+CREATE TABLE userEntity (
+    id INTEGER PRIMARY KEY NOT NULL,
+    login TEXT NOT NULL,
+    url TEXT NOT NULL,
+    nodeId TEXT NOT NULL,
+    avatarUrl TEXT NOT NULL,
+    gravatarId TEXT,
+    htmlUrl TEXT NOT NULL,
+    followersUrl TEXT NOT NULL,
+    followingUrl TEXT NOT NULL,
+    gistsUrl TEXT NOT NULL,
+    starredUrl TEXT NOT NULL,
+    subscriptionsUrl TEXT NOT NULL,
+    organizationsUrl TEXT NOT NULL,
+    reposUrl TEXT NOT NULL,
+    eventsUrl TEXT NOT NULL,
+    receivedEventsUrl TEXT NOT NULL,
+    type TEXT NOT NULL,
+    userViewType TEXT NOT NULL,
+    siteAdmin INTEGER NOT NULL
+);
+
+insertOrReplace:
+INSERT OR REPLACE INTO userEntity
+VALUES ?;

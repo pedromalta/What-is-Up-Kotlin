@@ -17,6 +17,7 @@ interface GithubApi {
     ): RepositoryListApiModel
 
     suspend fun getRepoPullRequests(
+        repoId: Long,
         owner: String,
         repo: String
     ): List<PullRequestApiModel>
@@ -47,7 +48,7 @@ class GithubApiImpl(
         }
     }
 
-    override suspend fun getRepoPullRequests(owner: String, repo: String): List<PullRequestApiModel> {
+    override suspend fun getRepoPullRequests(repoId: Long, owner: String, repo: String): List<PullRequestApiModel> {
         return withContext(dispatcher) {
             // Example URL: https://api.github.com/repos/JetBrains/kotlin/pulls
 
@@ -55,7 +56,9 @@ class GithubApiImpl(
                 url {
                     appendPathSegments("repos", owner, repo, "pulls")
                 }
-            }.body<List<PullRequestApiModel>>()
+            }.body<List<PullRequestApiModel>>().map {
+                it.copy(repoId = repoId)
+            }
         }
     }
 
