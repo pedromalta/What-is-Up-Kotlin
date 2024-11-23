@@ -38,11 +38,10 @@ fun <T : StableId> PagedLazyColumn(
         snapshotFlow {
             lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
         }
-            .debounce(debounceInMillis)
             .collect { lastVisibleIndex ->
                 val totalItems = lazyListState.layoutInfo.totalItemsCount
                 if (
-                    totalItems - lastVisibleIndex <= 4
+                    totalItems - lastVisibleIndex <= 6
                     && totalItems >= previousItemCount
                 ) {
                     previousItemCount = totalItems
