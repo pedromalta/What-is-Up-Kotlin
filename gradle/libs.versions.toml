@@ -26,6 +26,9 @@ napier = "2.7.1"
 #Room and SQLite support for Kotlin Multiplatform is better supported on these alphas
 room = "2.7.0-alpha11"
 sqlite =  "2.5.0-alpha11"
+#Store 5.1.0 alphas supports paging, previews stable doesn't
+store = "5.1.0-alpha05"
+
 
 
 [libraries]
@@ -68,6 +71,8 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+
+store = { module = "org.mobilenativefoundation.store:store5", version.ref = "store" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 reaktive = { module = "com.badoo.reaktive:reaktive", version.ref = "reaktive" }
