@@ -14,7 +14,7 @@ private fun initKoin() {
         koinStarted = true
         startKoin {
             printLogger(Level.INFO)
-            modules(DataModules().dataSource + UIModules().mainViewModel)
+            modules(DataModules().modules + UIModules().modules)
         }
     }
 }

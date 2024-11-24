@@ -47,6 +47,6 @@ class DataModules {
     /**
      * modules responsible for data request and cache
      */
-    val dataSource = remoteDatasource + localDatasource + repositoriesDataSource + pullRequestsDataSource
+    val modules = remoteDatasource + localDatasource + repositoriesDataSource + pullRequestsDataSource
 
 }

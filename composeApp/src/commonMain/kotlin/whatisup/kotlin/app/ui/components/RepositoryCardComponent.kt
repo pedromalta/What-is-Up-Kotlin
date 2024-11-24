@@ -7,12 +7,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.ForkLeft
+import androidx.compose.material.icons.filled.Gradient
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.material.icons.filled.Stars
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -21,13 +27,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.VectorPainter
+import androidx.compose.ui.graphics.vector.VectorPath
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.vectorResource
 import whatisup.kotlin.app.ui.NavigateToPullRequestsDetailScreen
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.model.Repository
+import whatisupkotlin.composeapp.generated.resources.Res
 
 /**
  * A component that displays a Repository
@@ -130,8 +146,21 @@ fun SharedTransitionScope.RepositoryCardComponent(
                 }
             }
             Column(
-                modifier = modifier.weight(2f)
+                modifier = modifier.weight(2f).padding(top = 16.dp)
             ) {
+
+                val painter: Painter = rememberVectorPainter(Icons.Filled.Image)
+
+                AsyncImage(
+                    model = repo.ownerAvatar,
+                    placeholder = painter,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .size(72.dp)
+                        .clip(CircleShape)
+                )
                 Text(
                     text = repo.ownerLogin,
                     fontSize = 16.sp,

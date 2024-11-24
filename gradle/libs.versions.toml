@@ -24,6 +24,9 @@ ksp = "2.0.21-1.0.27"
 window-size = "0.5.0"
 napier = "2.7.1"
 sql-delight = "2.0.2"
+coil = "3.0.3"
+coil-network = "3.0.0-alpha08"
+
 
 #Room and SQLite support for Kotlin Multiplatform is better supported on these alphas
 room = "2.7.0-alpha11"
@@ -85,6 +88,11 @@ reaktive-coroutines-interop = { module = "com.badoo.reaktive:coroutines-interop"
 
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 
+coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
+coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
 
 [bundles]
 compose-common = ["androidx-lifecycle-viewmodel-compose", "androidx-navigation-compose"]
@@ -92,6 +100,8 @@ koin-common = ["koin-core", "koin-compose", "koin-compose-viewmodel"]
 ktor-common = ["ktor-client-core", "ktor-client-logging", "ktor-client-encoding", "ktor-serialization-kotlinx-json", "ktor-client-content-negotiation"]
 reaktive-common = ["reaktive", "reaktive-annotations", "reaktive-coroutines-interop"]
 room-common = ["androidx-room-runtime", "sqlite-bundled"] # "androidx-room-compiler" has dependency conflicts
+coil-common = ["coil", "coil-compose-core", "coil-compose",  "coil-network-ktor"]
+
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

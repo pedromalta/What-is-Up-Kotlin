@@ -15,7 +15,9 @@ class RepositoryMapper: Mapper<DomainRepository, UIRepository> {
             ownerLogin = origin.owner.login,
             description = origin.description ?: "",
             forksCount = origin.forksCount,
-            starsCount = origin.stargazersCount
+            starsCount = origin.stargazersCount,
+            ownerAvatar = origin.owner.avatarUrl,
+            ownerGravatar = origin.owner.gravatarId,
         )
     }
 

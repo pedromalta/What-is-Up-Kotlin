@@ -81,9 +81,9 @@ kotlin {
             implementation(libs.bundles.koin.common)
             implementation(libs.bundles.reaktive.common)
             implementation(libs.bundles.ktor.common)
+            implementation(libs.bundles.coil.common)
 
             implementation(libs.napier)
-            implementation(libs.store)
             implementation(libs.sqlite.bundled)
 
         }

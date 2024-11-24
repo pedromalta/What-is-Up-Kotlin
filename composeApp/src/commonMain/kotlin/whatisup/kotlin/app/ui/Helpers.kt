@@ -22,17 +22,6 @@ fun isPortrait(): Boolean {
 @Composable
 fun StringResource.resolve(vararg args: Any): String = stringResource(this, *args)
 
-
-enum class Platform {
-    Android,
-    IOS,
-}
-
-/**
- * Current platform
- */
-expect val currentPlatform: Platform
-
 /**
  * Default value for debouncing operations
  */

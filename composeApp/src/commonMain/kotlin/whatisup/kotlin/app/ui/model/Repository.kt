@@ -8,6 +8,8 @@ data class Repository(
     override val id: Long,
     val name: String,
     val ownerLogin: String,
+    val ownerAvatar: String,
+    val ownerGravatar: String?,
     val description: String,
     val forksCount: Long,
     val starsCount: Long,

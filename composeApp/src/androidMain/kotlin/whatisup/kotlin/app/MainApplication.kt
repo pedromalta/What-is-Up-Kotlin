@@ -19,7 +19,7 @@ class MainApplication: Application() {
             printLogger(Level.INFO)
             // inject Android context
             androidContext(this@MainApplication)
-            modules(DataModules().dataSource + UIModules().mainViewModel)
+            modules(DataModules().modules + UIModules().modules)
         }
 
     }
