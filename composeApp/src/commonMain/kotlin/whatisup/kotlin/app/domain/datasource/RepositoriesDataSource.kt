@@ -123,6 +123,7 @@ class RepositoriesDataSourceImpl(
                         tag = TAG,
                         message = "Error on fetchRepositories"
                     )
+                    _repositoriesSubject.onError(error)
                 }
             )
     }

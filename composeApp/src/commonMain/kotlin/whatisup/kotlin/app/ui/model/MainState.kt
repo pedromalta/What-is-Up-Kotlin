@@ -9,6 +9,7 @@ import whatisup.kotlin.app.ui.viewmodels.MainViewModel
 data class MainState(
     val loadingRepoList: Boolean = false,
     val loadingPullRequests: Boolean = false,
+    val errorMessage: String? = null,
     val totalCount: Int = RepositoriesDataSource.UNKNOWN_TOTAL_ITEM_COUNT,
     val currentPage: Int = 0,
     val repos: Set<Repository> = setOf(),

@@ -1,25 +1,22 @@
 package whatisup.kotlin.app.ui
 
-import androidx.compose.animation.AnimatedVisibilityScope
-import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
 import whatisup.kotlin.app.ui.components.AppTopBar
@@ -39,27 +36,35 @@ typealias NavigateToPullRequestsDetailScreen = (pullRequestsId: PullRequestsId) 
  * use the [NavigateToPullRequestsDetailScreen] to navigate to the
  * detail view
  */
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.RepositoriesScreen(
+fun RepositoriesScreen(
     modifier: Modifier = Modifier,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    lazyListState: LazyListState = rememberLazyListState(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     navigateToPullRequestsDetailScreen: NavigateToPullRequestsDetailScreen,
 ) {
 
     val viewModel = koinViewModel<MainViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
 
-    val lazyListState = rememberLazyListState()
-
-    val isPortrait = isPortrait()
+    LaunchedEffect(snackbarHostState) {
+        snapshotFlow {
+            state.errorMessage
+        }.collect { errorMessage ->
+            errorMessage?.apply {
+                launch {
+                    snackbarHostState.showSnackbar(
+                        message = errorMessage,
+                    )
+                    viewModel.clearErrorMessage()
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
-            if (isPortrait) {
-                AppTopBar(Res.string.app_name.resolve())
-            }
+            AppTopBar(Res.string.app_name.resolve())
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
@@ -84,7 +89,6 @@ fun SharedTransitionScope.RepositoriesScreen(
             ) { repo ->
                 RepositoryCardComponent(
                     modifier = modifier.fillMaxWidth(),
-                    animatedVisibilityScope = animatedVisibilityScope,
                     repo = repo,
                     navigateToPullRequestsDetailScreen = navigateToPullRequestsDetailScreen
                 )

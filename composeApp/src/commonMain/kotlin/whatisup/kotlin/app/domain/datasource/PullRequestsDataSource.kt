@@ -100,13 +100,12 @@ class PullRequestsDataSourceImpl(
                     )
                 },
                 onError = { error ->
-                    //TODO process errors in a more user-friendly way
-                    //TODO recover errors that can be recovered
                     Napier.e(
                         throwable = error,
                         tag = TAG,
                         message = "Error on fetchPullRequests"
                     )
+                    _pullRequestSubject.onError(error)
                 },
                 onComplete = {
                     stopLoading()
