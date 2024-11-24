@@ -19,10 +19,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
+import whatisup.kotlin.app.ui.components.AppTopBar
 import whatisup.kotlin.app.ui.components.PagedLazyColumn
-import whatisup.kotlin.app.ui.components.RepoCardComponent
+import whatisup.kotlin.app.ui.components.RepositoryCardComponent
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.viewmodels.MainViewModel
+import whatisupkotlin.composeapp.generated.resources.Res
+import whatisupkotlin.composeapp.generated.resources.app_name
 
 typealias NavigateToPullRequestsDetailScreen = (pullRequestsId: PullRequestsId) -> Unit
 
@@ -47,7 +50,13 @@ fun SharedTransitionScope.RepositoriesScreen(
 
     val isPortrait = isPortrait()
 
-    Scaffold { paddingValues ->
+    Scaffold(
+        topBar = {
+            if (isPortrait) {
+                AppTopBar(Res.string.app_name.resolve())
+            }
+        }
+    ) { paddingValues ->
 
         Box(
             modifier = modifier
@@ -73,7 +82,7 @@ fun SharedTransitionScope.RepositoriesScreen(
                     }
                 }
             ) { repo ->
-                RepoCardComponent(
+                RepositoryCardComponent(
                     modifier = modifier.fillMaxWidth(),
                     animatedVisibilityScope = animatedVisibilityScope,
                     repo = repo,

@@ -7,8 +7,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.ForkLeft
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarRate
+import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +34,7 @@ import whatisup.kotlin.app.ui.model.Repository
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.RepoCardComponent(
+fun SharedTransitionScope.RepositoryCardComponent(
     modifier: Modifier = Modifier,
     animatedVisibilityScope: AnimatedVisibilityScope,
     repo: Repository,
@@ -76,14 +83,36 @@ fun SharedTransitionScope.RepoCardComponent(
                     )
                 )
                 Row {
+                    Icon(
+                        imageVector = Icons.Filled.ForkLeft,
+                        tint = MaterialTheme.colorScheme.tertiary,
+                        contentDescription = null,
+                        modifier = Modifier.padding(
+                            top = 4.dp,
+                            start = 16.dp,
+                            end = 0.dp,
+                            bottom = 8.dp
+                        )
+                    )
                     Text(
                         text = repo.forksCount.toString(),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier.padding(
                             top = 4.dp,
-                            start = 16.dp,
+                            start = 0.dp,
                             end = 4.dp,
+                            bottom = 8.dp
+                        )
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        tint = MaterialTheme.colorScheme.tertiary,
+                        contentDescription = null,
+                        modifier = Modifier.padding(
+                            top = 4.dp,
+                            start = 4.dp,
+                            end = 0.dp,
                             bottom = 8.dp
                         )
                     )
@@ -93,7 +122,7 @@ fun SharedTransitionScope.RepoCardComponent(
                         color = MaterialTheme.colorScheme.tertiary,
                         modifier = Modifier.padding(
                             top = 4.dp,
-                            start = 4.dp,
+                            start = 0.dp,
                             end = 4.dp,
                             bottom = 8.dp
                         )

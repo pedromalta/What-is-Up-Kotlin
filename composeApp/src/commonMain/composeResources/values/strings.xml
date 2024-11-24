@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">What is Up Kotlin</string>
+    <string name="empty_pull_requests_list">Não há nenhum Pull Request para esse repositório!</string>
+    <string name="pr_number"># %1$d</string>
+</resources>

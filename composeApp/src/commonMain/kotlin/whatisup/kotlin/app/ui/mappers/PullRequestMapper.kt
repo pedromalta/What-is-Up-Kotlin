@@ -14,6 +14,7 @@ class PullRequestMapper: Mapper<DomainPullRequest, UIPullRequest> {
             title = origin.title,
             userName = origin.user.login,
             body = origin.body ?: "",
+            number = origin.number
         )
     }
 

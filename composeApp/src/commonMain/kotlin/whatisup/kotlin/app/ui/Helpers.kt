@@ -4,6 +4,8 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Indicates if the screen is being rendered on portrait mode
@@ -13,6 +15,23 @@ import androidx.compose.runtime.Composable
 fun isPortrait(): Boolean {
     return calculateWindowSizeClass().widthSizeClass == WindowWidthSizeClass.Compact
 }
+
+/**
+ * Resolve the string
+ */
+@Composable
+fun StringResource.resolve(vararg args: Any): String = stringResource(this, *args)
+
+
+enum class Platform {
+    Android,
+    IOS,
+}
+
+/**
+ * Current platform
+ */
+expect val currentPlatform: Platform
 
 /**
  * Default value for debouncing operations
