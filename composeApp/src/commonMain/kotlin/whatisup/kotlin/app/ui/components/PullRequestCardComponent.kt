@@ -37,6 +37,10 @@ import whatisupkotlin.composeapp.generated.resources.Res
 import whatisupkotlin.composeapp.generated.resources.created_at
 import whatisupkotlin.composeapp.generated.resources.pr_number
 
+
+/**
+ * A component that displays a Pull Request
+ */
 @Composable
 fun PullRequestCardComponent(
     modifier: Modifier,

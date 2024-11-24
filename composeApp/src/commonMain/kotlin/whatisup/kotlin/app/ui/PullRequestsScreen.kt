@@ -3,6 +3,7 @@ package whatisup.kotlin.app.ui
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sanitizer
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,12 +26,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import whatisup.kotlin.app.ui.components.AppTopBar
+import whatisup.kotlin.app.ui.components.LoadingRow
 import whatisup.kotlin.app.ui.components.PullRequestCardComponent
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.viewmodels.MainViewModel
@@ -56,6 +60,7 @@ fun SharedTransitionScope.PullRequestsScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val isPortrait = isPortrait()
+    val uriHandler = LocalUriHandler.current
 
     Scaffold(
         topBar = {
@@ -79,19 +84,29 @@ fun SharedTransitionScope.PullRequestsScreen(
                     modifier = modifier.fillMaxSize(),
                     state = lazyListState,
                 ) {
-                    if (pullRequests.pullRequests.isEmpty()) {
-                        item {
-                            EmptyListCard()
-                        }
-                    }
-
                     items(
                         items = pullRequests.pullRequests,
                     ) { pullRequest ->
+
                         PullRequestCardComponent(
-                            modifier = modifier.fillMaxWidth(),
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    uriHandler.openUri(pullRequest.htmlUrl)
+                                }
+                            ,
                             pullRequest = pullRequest
                         )
+                    }
+
+                    if (state.loadingPullRequests) {
+                        item {
+                            LoadingRow(modifier)
+                        }
+                    } else if (pullRequests.pullRequests.isEmpty()) {
+                        item {
+                            EmptyListCard()
+                        }
                     }
 
                 }

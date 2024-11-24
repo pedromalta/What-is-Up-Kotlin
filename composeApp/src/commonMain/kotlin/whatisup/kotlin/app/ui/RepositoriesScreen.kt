@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -20,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
 import whatisup.kotlin.app.ui.components.AppTopBar
+import whatisup.kotlin.app.ui.components.LoadingRow
 import whatisup.kotlin.app.ui.components.PagedLazyColumn
 import whatisup.kotlin.app.ui.components.RepositoryCardComponent
 import whatisup.kotlin.app.ui.model.PullRequestsId
@@ -45,6 +49,7 @@ fun SharedTransitionScope.RepositoriesScreen(
 
     val viewModel = koinViewModel<MainViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val lazyListState = rememberLazyListState()
 
@@ -55,7 +60,8 @@ fun SharedTransitionScope.RepositoriesScreen(
             if (isPortrait) {
                 AppTopBar(Res.string.app_name.resolve())
             }
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { paddingValues ->
 
         Box(
@@ -73,13 +79,7 @@ fun SharedTransitionScope.RepositoriesScreen(
                     viewModel.fetchRepositories(state.currentPage + 1)
                 },
                 isLoadingContent = {
-                    Column(
-                        modifier = modifier.fillMaxSize().padding(8.dp),
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = modifier.align(Alignment.CenterHorizontally)
-                        )
-                    }
+                    LoadingRow(modifier)
                 }
             ) { repo ->
                 RepositoryCardComponent(

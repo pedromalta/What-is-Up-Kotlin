@@ -22,7 +22,8 @@ class PullRequestMapper: Mapper<DomainPullRequest, UIPullRequest> {
             body = origin.body ?: "",
             number = origin.number,
             userAvatar = origin.user.avatarUrl,
-            createdAt = parseDateTimeStringToLocalDate(origin.createdAt)
+            createdAt = parseDateTimeStringToLocalDate(origin.createdAt),
+            htmlUrl = origin.htmlUrl
         )
     }
 
