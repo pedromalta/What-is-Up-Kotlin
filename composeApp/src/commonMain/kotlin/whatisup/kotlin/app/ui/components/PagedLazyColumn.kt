@@ -18,12 +18,17 @@ import kotlinx.coroutines.flow.debounce
 import whatisup.kotlin.app.ui.defaultDebounceInMillis
 import whatisup.kotlin.app.ui.model.StableId
 
-@OptIn(FlowPreview::class)
+/**
+ * A Lazy Column that is scrollable and fetch new data when needed
+ * you can define a [onLoadMoreItems] lambda to load more data
+ * you can define a control [isLoading] state when [onLoadMoreItems] is running
+ * and provide a [isLoadingContent] composable to be shown
+ * [content] will be the composable for each item
+ */
 @Composable
 fun <T : StableId> PagedLazyColumn(
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
-    debounceInMillis: Long = defaultDebounceInMillis(),
     items: List<T>,
     perPage: Int,
     isLoading: Boolean,
@@ -33,15 +38,16 @@ fun <T : StableId> PagedLazyColumn(
 ) {
     var previousItemCount by remember { mutableStateOf(perPage) }
 
-    // Observe the scroll position
     LaunchedEffect(lazyListState) {
+        // Observe the scroll position
         snapshotFlow {
             lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
         }
             .collect { lastVisibleIndex ->
                 val totalItems = lazyListState.layoutInfo.totalItemsCount
                 if (
-                    totalItems - lastVisibleIndex <= 6
+                    //Fetch new items when there's less than 6 to the end of the scroll
+                    totalItems - lastVisibleIndex < 6
                     && totalItems >= previousItemCount
                 ) {
                     previousItemCount = totalItems

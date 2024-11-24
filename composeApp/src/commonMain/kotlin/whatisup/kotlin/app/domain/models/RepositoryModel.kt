@@ -1,5 +1,8 @@
 package whatisup.kotlin.app.domain.models
 
+/**
+ * Data model for a Repositoryß
+ */
 data class RepositoryModel(
     val id: Long,
     val name: String,

@@ -16,12 +16,18 @@ import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.logging.KtorSimpleLogger
 import kotlinx.serialization.json.Json
 
+/**
+ * Returns the [HttpClientEngine] for the platform
+ */
 expect fun getPlatformHttpClientEngine(): HttpClientEngine
 
 private const val TAG = "HTTP Client"
 private const val URL = "api.github.com"
 private const val PORT = 443
 
+/**
+ * Default Ktor [HttpClient] for the project, it's tuned to reach [URL] and [PORT]
+ */
 class DefaultHttpClient(
     engine: HttpClientEngine = getPlatformHttpClientEngine()
 ) {
@@ -32,7 +38,7 @@ class DefaultHttpClient(
         }
 
         install(Logging) {
-            level = LogLevel.ALL
+            level = LogLevel.INFO
             logger = object : Logger {
                 override fun log(message: String) {
                     Napier.d(message =

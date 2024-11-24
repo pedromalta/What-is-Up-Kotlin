@@ -1,5 +1,8 @@
 package whatisup.kotlin.app.domain.models
 
+/**
+ * Data model for a Repository
+ */
 data class PullRequestModel(
     val id: Long,
     val url: String,

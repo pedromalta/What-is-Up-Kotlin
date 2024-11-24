@@ -28,6 +28,9 @@ import org.koin.core.annotation.KoinExperimentalAPI
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.viewmodels.MainViewModel
 
+/**
+ * Detail view showing the list of Pull Requests
+ */
 @OptIn(ExperimentalSharedTransitionApi::class, KoinExperimentalAPI::class)
 @Composable
 fun SharedTransitionScope.PullRequestsScreen(

@@ -20,11 +20,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.koin.compose.viewmodel.koinViewModel
 import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
 import whatisup.kotlin.app.ui.components.PagedLazyColumn
+import whatisup.kotlin.app.ui.components.RepoCardComponent
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.viewmodels.MainViewModel
 
 typealias NavigateToPullRequestsDetailScreen = (pullRequestsId: PullRequestsId) -> Unit
 
+
+/**
+ * Master view containing a list of the repositories
+ * use the [NavigateToPullRequestsDetailScreen] to navigate to the
+ * detail view
+ */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.RepositoriesScreen(

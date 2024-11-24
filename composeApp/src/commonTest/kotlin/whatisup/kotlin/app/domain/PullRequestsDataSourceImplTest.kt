@@ -11,7 +11,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import whatisup.kotlin.app.data.api.githubApiMock
-import whatisup.kotlin.app.data.mocks.MockDB
+import whatisup.kotlin.app.data.persistence.MockDB
 import whatisup.kotlin.app.domain.datasource.PullRequestsDataSourceImpl
 import whatisup.kotlin.app.domain.models.PullRequestsModel
 import kotlin.test.AfterTest
@@ -20,6 +20,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
+/**
+ * Tests for [PullRequestsDataSourceImpl]
+ */
 class PullRequestsDataSourceImplTest {
 
     private val testingScheduler = TestScheduler(isManualProcessing = true)
@@ -41,10 +44,10 @@ class PullRequestsDataSourceImplTest {
 
 
     @Test
-    fun `fetchRepoList emits repo data and updates pullRequestsSubject`() = runTest {
+    fun `fetchPullRequests emits PullRequests ßto pullRequestsObservable`() = runTest {
         launch(Dispatchers.Main) {
 
-            val repoPullRequestsSubject = dataSource.pullRequestsSubject.test()
+            val repoPullRequestsSubject = dataSource.pullRequestsObservable.test()
             assertEquals(repoPullRequestsSubject.values.first(), PullRequestsModel.EMPTY, "Pull Requests should be null initially")
 
             dataSource.fetchPullRequests(
@@ -58,6 +61,5 @@ class PullRequestsDataSourceImplTest {
 
         }
     }
-
 
 }

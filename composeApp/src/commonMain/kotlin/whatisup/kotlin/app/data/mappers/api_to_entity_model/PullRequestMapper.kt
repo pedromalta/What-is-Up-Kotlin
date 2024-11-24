@@ -3,6 +3,9 @@ package whatisup.kotlin.app.data.mappers.api_to_entity_model
 import whatisup.kotlin.app.data.api.models.PullRequestApiModel
 import whatisup.kotlin.app.data.db.PullRequestEntity
 
+/**
+ * Map a [PullRequestApiModel] into a [PullRequestEntity]
+ */
 class PullRequestMapper : Mapper<PullRequestApiModel, PullRequestEntity> {
     override fun transform(origin: PullRequestApiModel): PullRequestEntity {
         origin.apply {

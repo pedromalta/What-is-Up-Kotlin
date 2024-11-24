@@ -16,12 +16,31 @@ import whatisup.kotlin.app.data.api.services.GithubApi
 import whatisup.kotlin.app.data.persistence.LocalDB
 import whatisup.kotlin.app.domain.models.PullRequestsModel
 
+/**
+ * Data Source for Pull Requests
+ * it contains a [pullRequestsObservable] source of truth
+ * that will emit a [PullRequestsModel] whenever there's new data
+ *
+ * you can fetch new data using [fetchPullRequests]
+ */
 interface PullRequestsDataSource {
 
-    //Use set to avoid duplicates
-    val pullRequestsSubject: BehaviorObservable<PullRequestsModel>
+    /**
+     * State of the loading process
+     * indicates if the Data Source is working to fetch new Data
+     */
     val loadingState: BehaviorObservable<Boolean>
 
+    /**
+     * Observable that emits a new [PullRequestsModel]
+     */
+    val pullRequestsObservable: BehaviorObservable<PullRequestsModel>
+
+    /**
+     * Fetch Pull Requests from a Repository
+     * the results will be emitted by [pullRequestsObservable]
+     * and while processing [loadingState] will be TRUE
+     */
     fun fetchPullRequests(repoId: Long, owner: String, repo: String)
 }
 
@@ -40,7 +59,7 @@ class PullRequestsDataSourceImpl(
 
     private val _pullRequestSubject = BehaviorSubject(PullRequestsModel.EMPTY)
         .scope { it.onComplete() }
-    override val pullRequestsSubject: BehaviorObservable<PullRequestsModel> = _pullRequestSubject
+    override val pullRequestsObservable: BehaviorObservable<PullRequestsModel> = _pullRequestSubject
 
     override fun fetchPullRequests(repoId: Long, owner: String, repo: String) {
         Napier.d(
@@ -81,6 +100,8 @@ class PullRequestsDataSourceImpl(
                     )
                 },
                 onError = { error ->
+                    //TODO process errors in a more user-friendly way
+                    //TODO recover errors that can be recovered
                     Napier.e(
                         throwable = error,
                         tag = TAG,

@@ -1,12 +1,14 @@
-package whatisup.kotlin.app.data.mocks
+package whatisup.kotlin.app.data.persistence
 
 import whatisup.kotlin.app.data.api.models.PullRequestApiModel
 import whatisup.kotlin.app.data.api.models.RepositoryApiModel
-import whatisup.kotlin.app.data.persistence.LocalDB
 import whatisup.kotlin.app.domain.models.PullRequestModel
 import whatisup.kotlin.app.domain.models.RepositoryModel
 import whatisup.kotlin.app.domain.models.UserModel
 
+/**
+ * Mock Implementation of [LocalDB]
+ */
 class MockDB : LocalDB {
     private val repositoriesSet = mutableSetOf<RepositoryModel>()
     private val pullRequestsSet: HashMap<Long, List<PullRequestModel>?> = hashMapOf()

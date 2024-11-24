@@ -33,7 +33,7 @@ class MainViewModel(
         fetchRepositories(1)
     }
 
-    val repositoriesObserver = repositoriesDataSource.repositoriesSubject
+    val repositoriesObserver = repositoriesDataSource.repositoriesObservable
         .subscribeOn(computationScheduler)
         .observeOn(computationScheduler)
         .map { repositories ->
@@ -59,7 +59,7 @@ class MainViewModel(
         }.scope()
 
 
-    val pullRequestsObserver = pullRequestsDataSource.pullRequestsSubject
+    val pullRequestsObserver = pullRequestsDataSource.pullRequestsObservable
         .subscribeOn(computationScheduler)
         .observeOn(computationScheduler)
         .map { repoPullRequests ->

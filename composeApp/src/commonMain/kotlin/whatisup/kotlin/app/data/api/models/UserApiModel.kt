@@ -3,6 +3,9 @@ package whatisup.kotlin.app.data.api.models
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Represents a User from GitHub API
+ */
 @Serializable
 data class UserApiModel(
     val id: Long,

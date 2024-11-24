@@ -6,6 +6,9 @@ import whatisup.kotlin.app.data.mappers.api_to_entity_model.toBoolean
 import whatisup.kotlin.app.domain.models.RepositoryModel
 import whatisup.kotlin.app.domain.models.UserModel
 
+/**
+ * Map a [GetPage] query response into a [RepositoryModel]
+ */
 class GetPageQueryRowToRepository: Mapper<GetPage, RepositoryModel> {
     override fun transform(origin: GetPage): RepositoryModel {
         return RepositoryModel(

@@ -1,4 +1,4 @@
-package whatisup.kotlin.app.ui
+package whatisup.kotlin.app.ui.components
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -18,9 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import whatisup.kotlin.app.ui.NavigateToPullRequestsDetailScreen
 import whatisup.kotlin.app.ui.model.PullRequestsId
 import whatisup.kotlin.app.ui.model.Repository
 
+/**
+ * A component that displays a Repository
+ */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.RepoCardComponent(

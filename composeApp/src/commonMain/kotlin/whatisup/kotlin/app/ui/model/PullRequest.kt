@@ -1,5 +1,9 @@
 package whatisup.kotlin.app.ui.model
 
+/**
+ * UI Data that represents a Pull Request
+ * [equals] and [hashCode] are based only on the [StableId]
+ */
 data class PullRequest(
     override val id: Long,
     val title: String,

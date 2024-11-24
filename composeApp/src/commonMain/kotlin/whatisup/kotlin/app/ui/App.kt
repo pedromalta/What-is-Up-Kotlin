@@ -9,15 +9,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.KoinContext
 import whatisup.kotlin.app.ui.navigation.Navigation
 import whatisup.kotlin.app.ui.theme.RepoAppTheme
 
-
+/**
+ * UI entrypoint
+ */
 @Composable
-@Preview
 fun App() {
+    // start logger
     Napier.base(DebugAntilog())
 
     KoinContext {

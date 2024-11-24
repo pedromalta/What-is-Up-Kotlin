@@ -3,6 +3,9 @@ package whatisup.kotlin.app.data.mappers.api_to_entity_model
 import whatisup.kotlin.app.data.api.models.RepositoryApiModel
 import whatisup.kotlin.app.data.db.RepositoryEntity
 
+/**
+ * Map a [RepositoryApiModel] into a [RepositoryEntity]
+ */
 class RepositoryMapper :
     Mapper<RepositoryApiModel, RepositoryEntity> {
 

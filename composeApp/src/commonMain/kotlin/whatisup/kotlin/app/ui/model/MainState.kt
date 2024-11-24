@@ -1,7 +1,11 @@
 package whatisup.kotlin.app.ui.model
 
 import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
+import whatisup.kotlin.app.ui.viewmodels.MainViewModel
 
+/**
+ * Master Detail UI state for the [MainViewModel]
+ */
 data class MainState(
     val loadingRepoList: Boolean = false,
     val loadingPullRequests: Boolean = false,

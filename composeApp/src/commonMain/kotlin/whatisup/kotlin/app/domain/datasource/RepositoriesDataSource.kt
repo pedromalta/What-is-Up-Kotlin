@@ -12,24 +12,55 @@ import com.badoo.reaktive.single.merge
 import com.badoo.reaktive.subject.behavior.BehaviorObservable
 import com.badoo.reaktive.subject.behavior.BehaviorSubject
 import io.github.aakira.napier.Napier
-import kotlinx.atomicfu.AtomicBoolean
 import whatisup.kotlin.app.data.api.services.GithubApi
 import whatisup.kotlin.app.data.persistence.LocalDB
 import whatisup.kotlin.app.domain.models.RepositoryModel
 
+/**
+ * Data Source for Repositories
+ * it contains a [repositoriesObservable] source of truth
+ * that will emit a set of [RepositoryModel] whenever there's new data
+ *
+ * you can fetch a new page of data using [fetchRepositories]
+ */
 interface RepositoriesDataSource {
 
     companion object {
+        /**
+         * Value that indicates we don't know how many items
+         * there is on the repositories list
+         */
         const val UNKNOWN_TOTAL_ITEM_COUNT = -1
+
+        /**
+         * Default number of repositories per page request to the Github API
+         */
         const val PER_PAGE = 30
     }
 
-    val repositoriesTotalCount: BehaviorObservable<Int>
-
-    //Use set to avoid duplicates
-    val repositoriesSubject: BehaviorObservable<Set<RepositoryModel>>
+    /**
+     * State of the loading process
+     * indicates if the Data Source is working to fetch new Data
+     */
     val loadingState: BehaviorObservable<Boolean>
 
+    /**
+     * Emits the total count of repositories.
+     */
+    val repositoriesTotalCount: BehaviorObservable<Int>
+
+    /**
+     * Observable that emits a set of [RepositoryModel] it will append new data
+     * and hopefully not duplicate old data
+     */
+    val repositoriesObservable: BehaviorObservable<Set<RepositoryModel>>
+
+    /**
+     * Fetch a page of Repositories
+     * the results will be added to the current set of data and
+     * emitted by [repositoriesObservable]
+     * and while processing [loadingState] will be TRUE
+     */
     fun fetchRepositories(page: Int)
 }
 
@@ -51,7 +82,7 @@ class RepositoriesDataSourceImpl(
     override val repositoriesTotalCount: BehaviorObservable<Int> = _repositoriesTotalCount
 
     private val _repositoriesSubject = BehaviorSubject(emptySet<RepositoryModel>()).scope { it.onComplete() }
-    override val repositoriesSubject: BehaviorObservable<Set<RepositoryModel>> = _repositoriesSubject
+    override val repositoriesObservable: BehaviorObservable<Set<RepositoryModel>> = _repositoriesSubject
 
     override fun fetchRepositories(page: Int) {
         Napier.d(message = "fetchRepositories(page: $page)", tag = TAG)
@@ -82,9 +113,11 @@ class RepositoriesDataSourceImpl(
                 onNext = { repositories ->
                     // We add the updated list to the current set so we don't mess with the old positions, the set nature
                     // of the data structure will keep the positions and prevent duplicates
-                    _repositoriesSubject.onNext(repositoriesSubject.value + repositories)
+                    _repositoriesSubject.onNext(repositoriesObservable.value + repositories)
                 },
                 onError = { error ->
+                    //TODO process errors in a more user-friendly way
+                    //TODO recover errors that can be recovered
                     Napier.e(
                         throwable = error,
                         tag = TAG,

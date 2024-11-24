@@ -10,7 +10,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import whatisup.kotlin.app.data.api.githubApiMock
-import whatisup.kotlin.app.data.mocks.MockDB
+import whatisup.kotlin.app.data.persistence.MockDB
 import whatisup.kotlin.app.domain.datasource.RepositoriesDataSourceImpl
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -18,6 +18,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+/**
+ * Tests for [RepositoriesDataSourceImpl]
+ */
 class RepositoriesDataSourceImplTest {
 
     private val testingScheduler = TestScheduler(isManualProcessing = true)
@@ -39,28 +42,28 @@ class RepositoriesDataSourceImplTest {
 
 
     @Test
-    fun `fetchRepoList emits repo data and updates repositoriesSubject`() = runTest {
+    fun `fetchRepositories emits Repositories to repositoriesObservable`() = runTest {
         launch(Dispatchers.Main) {
 
-            val repoList = dataSource.repositoriesSubject.value
+            val repoList = dataSource.repositoriesObservable.value
             assertTrue(repoList.isEmpty(), "Repositories should be empty initially")
 
             dataSource.fetchRepositories(page = 1)
             testingScheduler.process()
 
-            val firstPageResult = dataSource.repositoriesSubject.value
+            val firstPageResult = dataSource.repositoriesObservable.value
             assertEquals(30, firstPageResult.size, "Repositories should now contain 30 items, 1 page")
 
             dataSource.fetchRepositories(page = 2)
             testingScheduler.process()
 
-            val secondPageResult = dataSource.repositoriesSubject.value
+            val secondPageResult = dataSource.repositoriesObservable.value
             assertEquals(60, secondPageResult.size, "Repositories should contain 60 items, 2 pages")
 
             dataSource.fetchRepositories(page = 1)
             testingScheduler.process()
 
-            val cachePageResult = dataSource.repositoriesSubject.value
+            val cachePageResult = dataSource.repositoriesObservable.value
             assertEquals(60, cachePageResult.size, "Repositories should still contain 60 items, 2 pages")
 
         }

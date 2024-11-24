@@ -1,5 +1,9 @@
 package whatisup.kotlin.app.ui.model
 
+/**
+ * UI Data that represents a Repository
+ * [equals] and [hashCode] are based only on the [StableId]
+ */
 data class Repository(
     override val id: Long,
     val name: String,

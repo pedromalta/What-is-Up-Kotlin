@@ -13,12 +13,15 @@ import whatisup.kotlin.app.domain.datasource.RepositoriesDataSource
 import whatisup.kotlin.app.domain.models.PullRequestModel
 import whatisup.kotlin.app.domain.models.RepositoryModel
 
+/**
+ * Creates an AppDatabase instance that can be used to query entities from the DB
+ */
+fun createDatabase(driver: SqlDriver) = AppDatabase(driver)
 
-fun createDatabase(driver: SqlDriver): AppDatabase {
-    return AppDatabase(driver)
-}
-
-class SQLightDB(appDatabase: AppDatabase): LocalDB {
+/**
+ * SQLite Implementation of [LocalDB]
+ */
+class SQLiteDB(appDatabase: AppDatabase): LocalDB {
 
     private val repositoryQueries = appDatabase.repositoryQueries
     private val pullRequestQueries = appDatabase.pullRequestQueries

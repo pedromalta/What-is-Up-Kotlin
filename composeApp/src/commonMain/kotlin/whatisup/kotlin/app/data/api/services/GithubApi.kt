@@ -9,13 +9,23 @@ import kotlinx.coroutines.withContext
 import whatisup.kotlin.app.data.api.models.PullRequestApiModel
 import whatisup.kotlin.app.data.api.models.RepositoryListApiModel
 
+/**
+ * GitHub API
+ */
 interface GithubApi {
+
+    /**
+     * Requests a paged list of repositories filtering by [language] and sorting by [sort]
+     */
     suspend fun searchRepositories(
         language: String = "Kotlin",
         sort: String = "stars",
         page: Int,
     ): RepositoryListApiModel
 
+    /**
+     * Requests the last Pull Requests for a given repository
+     */
     suspend fun getRepoPullRequests(
         repoId: Long,
         owner: String,

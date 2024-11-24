@@ -13,11 +13,17 @@ import whatisup.kotlin.app.ui.RepositoriesScreen
 import whatisup.kotlin.app.ui.PullRequestsScreen
 import whatisup.kotlin.app.ui.model.PullRequestsId
 
+/**
+ * Available routes
+ */
 enum class NavigationScreens(val route: String) {
     HomeScreen("home_screen"),
     RepoDetailScreen("detail_screen")
 }
 
+/**
+ * Main Master Detail View navigation host
+ */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun Navigation(

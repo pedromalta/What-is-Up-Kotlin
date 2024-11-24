@@ -4,6 +4,9 @@ import whatisup.kotlin.app.data.mappers.api_to_entity_model.Mapper
 import whatisup.kotlin.app.domain.models.RepositoryModel as DomainRepository
 import whatisup.kotlin.app.ui.model.Repository as UIRepository
 
+/**
+ * Mapper from [DomainRepository] to [UIRepository]
+ */
 class RepositoryMapper: Mapper<DomainRepository, UIRepository> {
     override fun transform(origin: DomainRepository): UIRepository {
         return UIRepository(

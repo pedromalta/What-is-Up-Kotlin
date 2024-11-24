@@ -252,6 +252,15 @@ private val highContrastDarkColorScheme = darkColorScheme(
 
 val LocalThemeIsDark = compositionLocalOf { mutableStateOf(true) }
 
+/**
+ * Theme colors generated at
+ * https://material-foundation.github.io/material-theme-builder/
+ *
+ * Font Solway
+ * Source color #DB6978
+ *
+ *
+ */
 @Composable
 fun RepoAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

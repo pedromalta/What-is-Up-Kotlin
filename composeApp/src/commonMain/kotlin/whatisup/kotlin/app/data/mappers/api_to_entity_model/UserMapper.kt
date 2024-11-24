@@ -3,6 +3,9 @@ package whatisup.kotlin.app.data.mappers.api_to_entity_model
 import whatisup.kotlin.app.data.api.models.UserApiModel
 import whatisup.kotlin.app.data.db.UserEntity
 
+/**
+ * Map a [UserApiModel] into a [UserEntity]
+ */
 class UserMapper : Mapper<UserApiModel, UserEntity> {
 
     override fun transform(origin: UserApiModel): UserEntity {
