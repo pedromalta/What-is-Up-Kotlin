@@ -9,7 +9,7 @@ import whatisup.kotlin.app.domain.models.UserModel
 /**
  * Map a [GetPage] query response into a [RepositoryModel]
  */
-class GetPageQueryRowToRepository: Mapper<GetPage, RepositoryModel> {
+class GetPageQueryRowToRepository : Mapper<GetPage, RepositoryModel> {
     override fun transform(origin: GetPage): RepositoryModel {
         return RepositoryModel(
             id = origin.id,

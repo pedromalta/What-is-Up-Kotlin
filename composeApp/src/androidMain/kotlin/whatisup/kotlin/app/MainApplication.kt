@@ -10,7 +10,7 @@ import whatisup.kotlin.app.ui.di.UIModules
 /**
  * Main application class
  */
-class MainApplication: Application() {
+class MainApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()

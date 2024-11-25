@@ -9,10 +9,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * A loading [CircularProgressIndicator] row to show on the bottom of lazy columns
+ */
 @Composable
 fun LoadingRow(
     modifier: Modifier = Modifier
-){
+) {
     Column(
         modifier = modifier.fillMaxSize().padding(8.dp),
     ) {

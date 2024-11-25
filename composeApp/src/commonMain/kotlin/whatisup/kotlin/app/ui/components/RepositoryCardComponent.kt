@@ -50,7 +50,7 @@ fun RepositoryCardComponent(
                 )
             )
         },
-        elevation =  CardDefaults.outlinedCardElevation(),
+        elevation = CardDefaults.outlinedCardElevation(),
         modifier = modifier.fillMaxWidth().padding(4.dp)
     ) {
         Row {

@@ -21,7 +21,7 @@ fun createDatabase(driver: SqlDriver) = AppDatabase(driver)
 /**
  * SQLite Implementation of [LocalDB]
  */
-class SQLiteDB(appDatabase: AppDatabase): LocalDB {
+class SQLiteDB(appDatabase: AppDatabase) : LocalDB {
 
     private val repositoryQueries = appDatabase.repositoryQueries
     private val pullRequestQueries = appDatabase.pullRequestQueries

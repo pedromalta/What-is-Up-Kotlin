@@ -1,6 +1,5 @@
 package whatisup.kotlin.app.ui.navigation
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

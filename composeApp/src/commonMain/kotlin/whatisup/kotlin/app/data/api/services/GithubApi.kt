@@ -58,7 +58,11 @@ class GithubApiImpl(
         }
     }
 
-    override suspend fun getRepoPullRequests(repoId: Long, owner: String, repo: String): List<PullRequestApiModel> {
+    override suspend fun getRepoPullRequests(
+        repoId: Long,
+        owner: String,
+        repo: String
+    ): List<PullRequestApiModel> {
         return withContext(dispatcher) {
             // Example URL: https://api.github.com/repos/JetBrains/kotlin/pulls
 

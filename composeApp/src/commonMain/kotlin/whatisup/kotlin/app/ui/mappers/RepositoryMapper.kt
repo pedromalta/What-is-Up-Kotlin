@@ -7,7 +7,7 @@ import whatisup.kotlin.app.ui.model.Repository as UIRepository
 /**
  * Mapper from [DomainRepository] to [UIRepository]
  */
-class RepositoryMapper: Mapper<DomainRepository, UIRepository> {
+class RepositoryMapper : Mapper<DomainRepository, UIRepository> {
     override fun transform(origin: DomainRepository): UIRepository {
         return UIRepository(
             id = origin.id,

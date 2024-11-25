@@ -13,9 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.debounce
-import whatisup.kotlin.app.ui.defaultDebounceInMillis
 import whatisup.kotlin.app.ui.model.StableId
 
 /**
@@ -46,7 +43,7 @@ fun <T : StableId> PagedLazyColumn(
             .collect { lastVisibleIndex ->
                 val totalItems = lazyListState.layoutInfo.totalItemsCount
                 if (
-                    //Fetch new items when there's less than 6 to the end of the scroll
+                //Fetch new items when there's less than 6 to the end of the scroll
                     totalItems - lastVisibleIndex < 6
                     && totalItems >= previousItemCount
                 ) {

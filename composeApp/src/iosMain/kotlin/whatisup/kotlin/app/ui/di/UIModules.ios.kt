@@ -9,18 +9,18 @@ import platform.Foundation.NSSearchPathForDirectoriesInDomains
 import platform.Foundation.NSUserDomainMask
 
 actual val diskCacheModule: Module = module {
-        single<DiskCache> {
-            val paths = NSSearchPathForDirectoriesInDomains(
-                NSCachesDirectory,
-                NSUserDomainMask,
-                true
-            )
+    single<DiskCache> {
+        val paths = NSSearchPathForDirectoriesInDomains(
+            NSCachesDirectory,
+            NSUserDomainMask,
+            true
+        )
 
-            val path = paths.first().toString().toPath()
-            DiskCache.Builder()
-                .directory(
-                    path
-                )
-                .build()
-        }
+        val path = paths.first().toString().toPath()
+        DiskCache.Builder()
+            .directory(
+                path
+            )
+            .build()
     }
+}

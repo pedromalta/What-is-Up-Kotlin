@@ -52,7 +52,11 @@ class RepositoriesDataSourceImplTest {
             testingScheduler.process()
 
             val firstPageResult = dataSource.repositoriesObservable.value
-            assertEquals(30, firstPageResult.size, "Repositories should now contain 30 items, 1 page")
+            assertEquals(
+                30,
+                firstPageResult.size,
+                "Repositories should now contain 30 items, 1 page"
+            )
 
             dataSource.fetchRepositories(page = 2)
             testingScheduler.process()
@@ -64,7 +68,11 @@ class RepositoriesDataSourceImplTest {
             testingScheduler.process()
 
             val cachePageResult = dataSource.repositoriesObservable.value
-            assertEquals(60, cachePageResult.size, "Repositories should still contain 60 items, 2 pages")
+            assertEquals(
+                60,
+                cachePageResult.size,
+                "Repositories should still contain 60 items, 2 pages"
+            )
 
         }
     }

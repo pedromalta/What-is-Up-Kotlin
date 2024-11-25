@@ -15,7 +15,7 @@ data class PullRequest(
     val userAvatar: String,
     val createdAt: LocalDateTime,
     val htmlUrl: String,
-): StableId {
+) : StableId {
 
     val createAtDate: String
         get() {

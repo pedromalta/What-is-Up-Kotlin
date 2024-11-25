@@ -13,7 +13,7 @@ data class Repository(
     val description: String,
     val forksCount: Long,
     val starsCount: Long,
-): StableId {
+) : StableId {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

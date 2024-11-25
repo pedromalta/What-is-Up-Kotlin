@@ -7,6 +7,9 @@ import coil3.request.crossfade
 import coil3.util.DebugLogger
 import coil3.util.Logger
 
+/**
+ * Gets you a Coil Async Image Loader ready to be used
+ */
 fun getCoilAsyncImageLoader(context: PlatformContext, diskCache: DiskCache) =
     ImageLoader.Builder(context)
         .crossfade(true)

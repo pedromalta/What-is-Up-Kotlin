@@ -1,10 +1,5 @@
 package whatisup.kotlin.app.ui.di
 
-import coil3.ImageLoader
-import coil3.PlatformContext
-import coil3.disk.DiskCache
-import coil3.request.crossfade
-import coil3.util.DebugLogger
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import whatisup.kotlin.app.ui.viewmodels.MainViewModel

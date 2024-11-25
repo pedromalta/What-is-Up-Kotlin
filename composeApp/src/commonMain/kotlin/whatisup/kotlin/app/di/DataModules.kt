@@ -37,16 +37,29 @@ class DataModules {
     }
 
     private val repositoriesDataSource = module {
-        factory<RepositoriesDataSource> { RepositoriesDataSourceImpl(get(), get(), computationScheduler) }
+        factory<RepositoriesDataSource> {
+            RepositoriesDataSourceImpl(
+                get(),
+                get(),
+                computationScheduler
+            )
+        }
     }
 
     private val pullRequestsDataSource = module {
-        factory<PullRequestsDataSource> { PullRequestsDataSourceImpl(get(), get(), computationScheduler) }
+        factory<PullRequestsDataSource> {
+            PullRequestsDataSourceImpl(
+                get(),
+                get(),
+                computationScheduler
+            )
+        }
     }
 
     /**
      * modules responsible for data request and cache
      */
-    val modules = remoteDatasource + localDatasource + repositoriesDataSource + pullRequestsDataSource
+    val modules =
+        remoteDatasource + localDatasource + repositoriesDataSource + pullRequestsDataSource
 
 }

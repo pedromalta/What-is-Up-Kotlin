@@ -81,8 +81,10 @@ class RepositoriesDataSourceImpl(
         BehaviorSubject(RepositoriesDataSource.UNKNOWN_TOTAL_ITEM_COUNT).scope { it.onComplete() }
     override val repositoriesTotalCount: BehaviorObservable<Int> = _repositoriesTotalCount
 
-    private val _repositoriesSubject = BehaviorSubject(emptySet<RepositoryModel>()).scope { it.onComplete() }
-    override val repositoriesObservable: BehaviorObservable<Set<RepositoryModel>> = _repositoriesSubject
+    private val _repositoriesSubject =
+        BehaviorSubject(emptySet<RepositoryModel>()).scope { it.onComplete() }
+    override val repositoriesObservable: BehaviorObservable<Set<RepositoryModel>> =
+        _repositoriesSubject
 
     override fun fetchRepositories(page: Int) {
         Napier.d(message = "fetchRepositories(page: $page)", tag = TAG)

@@ -48,7 +48,11 @@ class PullRequestsDataSourceImplTest {
         launch(Dispatchers.Main) {
 
             val repoPullRequestsSubject = dataSource.pullRequestsObservable.test()
-            assertEquals(repoPullRequestsSubject.values.first(), PullRequestsModel.EMPTY, "Pull Requests should be null initially")
+            assertEquals(
+                repoPullRequestsSubject.values.first(),
+                PullRequestsModel.EMPTY,
+                "Pull Requests should be null initially"
+            )
 
             dataSource.fetchPullRequests(
                 repoId = 3432266,
@@ -57,7 +61,11 @@ class PullRequestsDataSourceImplTest {
             )
             testingScheduler.process()
 
-            assertNotEquals(repoPullRequestsSubject.values.last(), PullRequestsModel.EMPTY, "Pull Requests should be fetched")
+            assertNotEquals(
+                repoPullRequestsSubject.values.last(),
+                PullRequestsModel.EMPTY,
+                "Pull Requests should be fetched"
+            )
 
         }
     }

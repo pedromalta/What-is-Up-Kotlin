@@ -9,7 +9,7 @@ import whatisup.kotlin.app.domain.models.UserModel
 /**
  * Map a [GetByRepoId] query response into a [PullRequestModel]
  */
-class GetByRepoIdQueryRowToPullRequest: Mapper<GetByRepoId, PullRequestModel> {
+class GetByRepoIdQueryRowToPullRequest : Mapper<GetByRepoId, PullRequestModel> {
     override fun transform(origin: GetByRepoId): PullRequestModel {
         return PullRequestModel(
             id = origin.id,
