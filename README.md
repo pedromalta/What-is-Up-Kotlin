@@ -26,6 +26,9 @@ Currently the API will cap the number of requests
 * Use and explore more Githup API, headers have pagination URLs, authorization can be done
 * Use Store 4 and Paging 3 instead of a custom Cache (the point of the app was to develop a simple cache and pagination
 but we have good libs for that, yet the libs are still not 100% ok in Compose Multiplatform though, almost there)
+* But if keeping custom Cache, implement invalidation strategies, time based, save insert dates and remove old ones from the DB
+respecting a threshold. Also using this we can decide to not request the API every time, specially for the Repositories.
+Pull Requests are more volatile though.
 * Error reporting can be more user friendly and well developed with custom views on the bottom bar of the scaffold and 
 more human readable errors
 * Animate transitions with SharedTransitions
