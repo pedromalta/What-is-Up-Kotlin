@@ -6,20 +6,13 @@ import org.koin.core.logger.Level
 import whatisup.kotlin.app.di.DataModules
 import whatisup.kotlin.app.ui.di.UIModules
 
-private var koinStarted = false
-
-// Control start of Koin so that it doesn't start twice
-private fun initKoin() {
-    if (!koinStarted) {
-        koinStarted = true
+fun MainViewController() = ComposeUIViewController(
+    configure = {
         startKoin {
             printLogger(Level.INFO)
             modules(DataModules().modules + UIModules().modules)
         }
     }
-}
-
-fun MainViewController() = ComposeUIViewController {
-    initKoin()
+) {
     App()
 }
